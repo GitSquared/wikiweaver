@@ -1,0 +1,15 @@
+.main {
+	height: 100%;
+	width: 100%;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 2rem;
+}
+
+.title {
+	font-family: "EB Garamond", serif;
+	font-size: 3rem;
+}

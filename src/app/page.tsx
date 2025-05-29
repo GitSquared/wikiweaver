@@ -1,26 +1,23 @@
-import { DEFAULT_MODEL } from '@/ai';
-import { db } from '@/db';
-import { articles } from '@/db/schema/article';
-import { generateText } from 'ai';
-import styles from './page.module.css';
+import Home from './components/Home';
 
-export default async function Home() {
-	const allArticles = await db.select().from(articles);
+export const DEFAULT_UNIVERSE_SLUG = 'Treedataland';
 
-	const { text: aiWelcome } = await generateText({
-		model: DEFAULT_MODEL,
-		prompt: 'Say hello to a new WikiWeaver user!',
-	});
+export default async function HomePage() {
+	async function makeUniverse(prompt: string): Promise<string> {
+		// returns slug
+		'use server';
+
+		console.log('Creating universe with prompt:', prompt);
+
+		// TODO: implement
+
+		return DEFAULT_UNIVERSE_SLUG;
+	}
 
 	return (
-		<main className={styles.main}>
-			<h1 className={styles.title}>WikiWeaver</h1>
-			<ul>
-				{allArticles.map((article) => (
-					<li key={article.id}>{article.title}</li>
-				))}
-			</ul>
-			<p style={{ maxWidth: '400px' }}>{aiWelcome}</p>
-		</main>
+		<Home
+			onMakeUniverse={makeUniverse}
+			defaultUniverseSlug={DEFAULT_UNIVERSE_SLUG}
+		/>
 	);
 }

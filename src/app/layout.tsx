@@ -22,7 +22,9 @@ export default function RootLayout({
 		<html lang="en">
 			<Analytics />
 			<SpeedInsights />
-			<body>{children}</body>
+			<body className="bg-background text-foreground font-sans">
+				{children}
+			</body>
 		</html>
 	);
 }

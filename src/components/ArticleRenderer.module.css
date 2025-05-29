@@ -1,0 +1,24 @@
+.article {
+	padding: 1rem 2rem;
+}
+
+.article h1 {
+	font-family: var(--font-serif);
+	font-style: italic;
+	border-bottom: 1px solid var(--foreground);
+	margin-bottom: 1.5rem;
+}
+
+.article h2 {
+	font-family: var(--font-serif);
+	margin-top: 1.5rem;
+	padding-bottom: 0.2rem;
+	border-bottom: 1px solid var(--foreground);
+	margin-bottom: 0.7rem;
+}
+
+.article h3,
+.article h4 {
+	font-weight: bold;
+	margin-top: 0.5rem;
+}

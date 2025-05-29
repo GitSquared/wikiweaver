@@ -10,8 +10,10 @@ export async function weaveWikiArticle({ title }: WeaveWikiArticleParams) {
 
 - Maintain a formal, Wikipedia-like tone.
 - Feel free to fabricate locations, names, timelines, and organizations.
-- Within the article content, wrap references to other fictional articles using double brackets like [[Other Article Name]]. These will be automatically turned into links. The article should have at least 5 such refrences, but no more than 20.
+- Within the article content, wrap these invented names using double brackets like [[Other Article Name]]. These will be automatically turned into links.
+- Use at least 5 such references, but no more than 30.
 - Use markdown formatting for headings, lists, and emphasis.
+- Print the title of the article without any alteration.
 - Write an article of at least 500 words.
 - Keep internal logic and continuity consistent.
 - Avoid real-world facts unless twisted into the fiction.

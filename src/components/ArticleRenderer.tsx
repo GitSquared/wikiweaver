@@ -1,5 +1,5 @@
+import { slugify } from '@/lib/slugify';
 import ReactMarkdown from 'react-markdown';
-import { slugify } from '../slugify';
 import styles from './ArticleRenderer.module.css';
 
 interface ArticleRendererProps {

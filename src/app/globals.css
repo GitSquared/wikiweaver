@@ -12,6 +12,7 @@
 	--font-serif: "EB Garamond", serif;
 	--font-sans: Arial, Helvetica, sans-serif;
 	--color-universe-blue: #3a61ff;
+	--color-article-link-visited: #3f31dd;
 
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);

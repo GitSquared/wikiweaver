@@ -1,0 +1,81 @@
+.fadeIn {
+	animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.spinner * {
+	color: var(--color-foreground) !important;
+	border-color: var(--color-foreground) !important;
+}
+
+.loadingText::before {
+	content: "Loading...";
+	animation: changeText 28s infinite;
+}
+
+@keyframes changeText {
+	0% {
+		content: "Loading...";
+	}
+
+	7.69% {
+		content: "Reticulating splines...";
+	}
+
+	15.38% {
+		content: "Weaving the web...";
+	}
+
+	23.07% {
+		content: "Resting on the 7th day...";
+	}
+
+	30.76% {
+		content: "Figuring it out...";
+	}
+
+	38.45% {
+		content: "Turning on, tuning in...";
+	}
+
+	46.14% {
+		content: "Building worlds...";
+	}
+
+	53.83% {
+		content: "Making magic...";
+	}
+
+	61.52% {
+		content: "Fixing a few bugs...";
+	}
+
+	69.21% {
+		content: "Offsetting carbon impact...";
+	}
+
+	76.9% {
+		content: "Aligning directives...";
+	}
+
+	84.59% {
+		content: "Recomputing vectors...";
+	}
+
+	92.28% {
+		content: "Optimizing performance...";
+	}
+
+	100% {
+		content: "Stabilizing...";
+	}
+}

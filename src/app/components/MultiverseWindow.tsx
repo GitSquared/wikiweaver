@@ -35,7 +35,7 @@ function MultiverseWindow(
 	return (
 		<motion.div
 			ref={scope}
-			className="relative w-[250px] h-[250px]"
+			className="relative aspect-square w-[250px] max-w-[90w] z-50"
 			initial={{ opacity: 0, scale: 1 }}
 			whileInView={{
 				opacity: 1,
@@ -43,14 +43,19 @@ function MultiverseWindow(
 		>
 			<div
 				className={cn(
-					'absolute top-[-10px] left-[-10px] w-[270px] h-[270px]',
+					'absolute top-[-10px] left-[-10px] aspect-square w-[270px] max-w-[95vw]',
 					baseWindowClass,
 					'blur-xl opacity-50',
 				)}
 			>
 				<Tranquiluxe />
 			</div>
-			<div className={cn('absolute w-[250px] h-[250px]', baseWindowClass)}>
+			<div
+				className={cn(
+					'absolute aspect-square w-[250px] max-w-[90vw]',
+					baseWindowClass,
+				)}
+			>
 				<Tranquiluxe />
 			</div>
 		</motion.div>

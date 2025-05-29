@@ -1,7 +1,8 @@
 'use client';
 
+import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import MultiverseWindow, { type MultiverseWindowRef } from './MultiverseWindow';
 import UniversePrompt from './UniversePrompt';
 
@@ -15,6 +16,7 @@ export default function Home({
 	defaultUniverseSlug,
 }: HomeProps) {
 	const windowRef = useRef<MultiverseWindowRef>(null);
+	const [error, setError] = useState<string | null>(null);
 
 	const router = useRouter();
 
@@ -24,11 +26,21 @@ export default function Home({
 	};
 
 	const onSubmit = async (prompt: string) => {
-		const slug = await onMakeUniverse(prompt);
-		await navigateToUniverse(slug);
+		setError(null);
+		try {
+			const slug = await onMakeUniverse(prompt);
+			await navigateToUniverse(slug);
+		} catch (err) {
+			setError(
+				(err as Error)?.message ||
+					'An error occurred while creating the universe.',
+			);
+			return;
+		}
 	};
 
 	const onSubmitEmpty = async () => {
+		setError(null);
 		await navigateToUniverse(defaultUniverseSlug);
 	};
 
@@ -45,6 +57,23 @@ export default function Home({
 				<p>What if you had access to another universe's Wikipedia?</p>
 
 				<UniversePrompt onSubmit={onSubmit} onSubmitEmpty={onSubmitEmpty} />
+
+				<motion.p
+					className="text-red-400 text-sm text-center min-h-[1.1rem] max-w-[min(500px,100%)]"
+					initial={{ opacity: 0 }}
+					animate={
+						error
+							? {
+									opacity: 1,
+									// Shake on appear
+									x: [0, -5, 5, -5, 5, 0],
+									transition: { duration: 0.5 },
+								}
+							: { opacity: 0 }
+					}
+				>
+					{error}
+				</motion.p>
 			</div>
 		</main>
 	);

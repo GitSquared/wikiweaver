@@ -16,5 +16,6 @@ export default defineConfig({
 	dbCredentials: {
 		url: dbUrl,
 	},
-	casing: 'snake_case',
+	// 2025-05-29 snake_case seems to cause some issues like untranformed default column names on insert
+	casing: 'camelCase',
 });

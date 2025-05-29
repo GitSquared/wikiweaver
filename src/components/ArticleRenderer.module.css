@@ -4,6 +4,7 @@
 
 .article h1 {
 	font-family: var(--font-serif);
+	font-size: 2rem;
 	font-style: italic;
 	border-bottom: 1px solid var(--foreground);
 	margin-bottom: 1.5rem;
@@ -11,6 +12,7 @@
 
 .article h2 {
 	font-family: var(--font-serif);
+	font-size: 1.5rem;
 	margin-top: 1.5rem;
 	padding-bottom: 0.2rem;
 	border-bottom: 1px solid var(--foreground);
@@ -21,4 +23,20 @@
 .article h4 {
 	font-weight: bold;
 	margin-top: 0.5rem;
+}
+
+.article a {
+	color: var(--color-universe-blue);
+	text-decoration: underline;
+	filter: brightness(1);
+	transition: filter 0.2s ease-out;
+}
+
+.article a:hover,
+.article a:focus {
+	filter: brightness(1.4);
+}
+
+.article a:visited {
+	color: var(--color-article-link-visited);
 }

@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const formSchema = z.object({
@@ -34,6 +35,8 @@ export default function UniversePrompt({
 	onSubmit,
 	onSubmitEmpty,
 }: UniversePromptProps) {
+	const [loading, setLoading] = useState(false);
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -41,18 +44,25 @@ export default function UniversePrompt({
 		},
 	});
 
+	async function handleSubmit(data: z.infer<typeof formSchema>) {
+		try {
+			setLoading(true);
+			const prompt = data.universePrompt.trim();
+			if (!prompt.length) {
+				onSubmitEmpty();
+			}
+
+			await onSubmit(prompt);
+		} finally {
+			setLoading(false);
+		}
+	}
+
 	return (
 		<Form {...form}>
 			<form
-				onSubmit={form.handleSubmit((d) => {
-					const prompt = d.universePrompt.trim();
-					if (!prompt.length) {
-						onSubmitEmpty();
-					}
-
-					onSubmit(prompt);
-				})}
-				className="flex flex-row gap-2"
+				onSubmit={form.handleSubmit(handleSubmit)}
+				className="flex flex-row items-center justify-center gap-2 max-w-full flex-wrap"
 			>
 				<FormField
 					control={form.control}
@@ -64,6 +74,7 @@ export default function UniversePrompt({
 									className="min-w-[400px]"
 									type="search"
 									placeholder={defaultPrompt}
+									disabled={loading}
 									{...field}
 								/>
 							</FormControl>
@@ -71,7 +82,7 @@ export default function UniversePrompt({
 						</FormItem>
 					)}
 				/>
-				<Button variant="primary" type="submit">
+				<Button variant="primary" type="submit" disabled={loading}>
 					Explore
 					<ChevronRightIcon className="size-[20px]" />
 				</Button>

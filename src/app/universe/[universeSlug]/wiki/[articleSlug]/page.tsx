@@ -1,6 +1,9 @@
 import ArticleRenderer from '@/components/ArticleRenderer';
+import { db } from '@/db';
+import { universe } from '@/db/schema/universe';
 import { unslugify } from '@/lib/slugify';
 import { weaveWikiArticle } from '@/lib/weave';
+import { eq } from 'drizzle-orm';
 
 export default async function WikiArticlePage({
 	params,
@@ -11,7 +14,13 @@ export default async function WikiArticlePage({
 
 	const title = unslugify(articleSlug);
 
-	const article = await weaveWikiArticle({ title });
+	const [verse] = await db
+		.select()
+		.from(universe)
+		.where(eq(universe.slug, universeSlug))
+		.limit(1);
+
+	const article = await weaveWikiArticle({ verse, title });
 
 	return <ArticleRenderer>{article}</ArticleRenderer>;
 }

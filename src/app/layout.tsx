@@ -3,6 +3,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import './globals.css';
 import { EB_Garamond } from 'next/font/google';
+import type { ReactNode } from 'react';
 
 export const fontWiki = EB_Garamond({
 	variable: '--font-wiki',
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
 	children,
 }: Readonly<{
-	children: React.ReactNode;
+	children: ReactNode;
 }>) {
 	return (
 		<html lang="en">

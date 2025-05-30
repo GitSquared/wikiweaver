@@ -5,17 +5,25 @@ import { motion, useAnimate } from 'motion/react';
 import { forwardRef, useImperativeHandle } from 'react';
 import { Tranquiluxe } from 'uvcanvas';
 
+interface MultiverseWindowProps {
+	size: string; // tailwind size- class, e.g 'size-[250px]' or 'size-[100px]'
+}
+
 export interface MultiverseWindowRef {
 	blowUp: () => Promise<void>;
 }
 
-const baseWindowClass =
-	'rounded-full overflow-clip hue-rotate-[282deg] contrast-125 dark:brightness-[80%]';
-
 function MultiverseWindow(
-	_: unknown,
+	{ size }: MultiverseWindowProps,
 	ref: React.ForwardedRef<MultiverseWindowRef>,
 ) {
+	const baseContainerClass = cn(
+		size,
+		'aspect-square max-w-[90vw] rounded-full origin-center',
+	);
+	const baseShaderClass =
+		'overflow-clip hue-rotate-[282deg] contrast-125 dark:brightness-[80%]';
+
 	const [scope, animate] = useAnimate();
 
 	useImperativeHandle(ref, () => ({
@@ -35,7 +43,7 @@ function MultiverseWindow(
 	return (
 		<motion.div
 			ref={scope}
-			className="relative aspect-square w-[250px] max-w-[90w] z-50"
+			className={cn(baseContainerClass, 'relative z-50')}
 			initial={{ opacity: 0, scale: 1 }}
 			whileInView={{
 				opacity: 1,
@@ -43,18 +51,15 @@ function MultiverseWindow(
 		>
 			<div
 				className={cn(
-					'absolute top-[-10px] left-[-10px] aspect-square w-[270px] max-w-[95vw]',
-					baseWindowClass,
-					'blur-xl opacity-50',
+					baseContainerClass,
+					baseShaderClass,
+					'absolute blur-xl opacity-50',
 				)}
 			>
 				<Tranquiluxe />
 			</div>
 			<div
-				className={cn(
-					'absolute aspect-square w-[250px] max-w-[90vw]',
-					baseWindowClass,
-				)}
+				className={cn(baseContainerClass, baseShaderClass, 'absolute scale-90')}
 			>
 				<Tranquiluxe />
 			</div>

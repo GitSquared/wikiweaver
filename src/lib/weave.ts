@@ -41,12 +41,17 @@ export async function weaveWikiArticle({
 	verse,
 	title,
 }: { verse: typeof universe.$inferSelect; title: string }): Promise<string> {
-	const prompt = `You're an encyclopedia from a fictional universe. Write a detailed article about "${title}" as if it were a real historical event, place, object, cultural phenomenon or concept in that world.
+	const prompt = `You're writing an encyclopedia from a fictional universe. This universe is called "${verse.name}", and here is some information about it:
+	
+	"${verse.prompt}"
+
+	Now, write a detailed article about "${title}" as if it were a real historical event, place, object, cultural phenomenon or concept in that world.
 
 - Maintain a formal, Wikipedia-like tone.
 - Feel free to fabricate locations, names, timelines, and organizations.
-- Within the article content, wrap these invented names using double brackets like [[Other Article Name]]. These will be automatically turned into links.
-- Use at least 5 such references, but no more than 30.
+- Within the article content, wrap these invented names using double brackets like [[Name]]. These will be automatically turned into links.
+- Invent at least 5 such references, but no more than 30.
+- Keep the article in-universe and consistent with its lore. Do not mention the fictional universe's name or prompt directly.
 - Use markdown formatting for headings, lists, and emphasis.
 - Print the title of the article without any alteration.
 - Write an article of at least 500 words.

@@ -1,9 +1,11 @@
 'use client';
 
+import MultiverseWindow, {
+	type MultiverseWindowRef,
+} from '@/components/MultiverseWindow';
 import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
-import MultiverseWindow, { type MultiverseWindowRef } from './MultiverseWindow';
 import UniversePrompt from './UniversePrompt';
 
 interface HomeProps {
@@ -51,7 +53,7 @@ export default function Home({
 				<h2 className="text-2xl font-serif font-medium">Weave new worlds</h2>
 			</div>
 
-			<MultiverseWindow ref={windowRef} />
+			<MultiverseWindow ref={windowRef} size="size-[250px]" />
 
 			<div className="flex flex-col items-center gap-4">
 				<p>What if you had access to another universe's Wikipedia?</p>

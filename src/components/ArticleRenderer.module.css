@@ -1,10 +1,7 @@
-.article {
-	padding: 1rem 2rem;
-}
-
 .article h1 {
 	font-family: var(--font-serif);
-	font-size: 2rem;
+	font-size: var(--text-3xl);
+	line-height: var(--line-height-3xl);
 	font-style: italic;
 	border-bottom: 1px solid var(--foreground);
 	margin-bottom: 1.5rem;
@@ -12,17 +9,24 @@
 
 .article h2 {
 	font-family: var(--font-serif);
-	font-size: 1.5rem;
+	font-size: var(--text-2xl);
+	line-height: var(--line-height-2xl);
 	margin-top: 1.5rem;
 	padding-bottom: 0.2rem;
 	border-bottom: 1px solid var(--foreground);
-	margin-bottom: 0.7rem;
+	margin-bottom: 1rem;
 }
 
 .article h3,
 .article h4 {
 	font-weight: bold;
 	margin-top: 0.5rem;
+}
+
+.article p {
+	color: var(--foreground);
+	font-size: var(--text-base);
+	line-height: var(--line-height-base);
 }
 
 .article a {

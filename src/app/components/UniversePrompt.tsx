@@ -49,7 +49,8 @@ export default function UniversePrompt({
 			setLoading(true);
 			const prompt = data.universePrompt.trim();
 			if (!prompt.length) {
-				onSubmitEmpty();
+				await onSubmitEmpty();
+				return;
 			}
 
 			await onSubmit(prompt);

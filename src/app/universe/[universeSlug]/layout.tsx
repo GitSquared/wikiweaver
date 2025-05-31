@@ -2,8 +2,19 @@ import MultiverseWindow from '@/components/MultiverseWindow';
 import { db } from '@/db';
 import { universe } from '@/db/schema/universe';
 import { eq } from 'drizzle-orm';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+
+export const metadata: Metadata = {
+	generator: 'WikiWeaver AI',
+	authors: [
+		{
+			name: 'WikiWeaver AI',
+			url: 'https://wikiweaver.gaby.dev',
+		},
+	],
+};
 
 export default async function UniverseLayout({
 	children,

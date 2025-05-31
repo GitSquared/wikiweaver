@@ -13,8 +13,12 @@
 }
 
 .spinner * {
-	color: var(--color-foreground) !important;
-	border-color: var(--color-foreground) !important;
+	color: var(--color-universe-blue) !important;
+	border-color: var(--color-universe-blue) !important;
+}
+
+.spinner>span>* {
+	border-width: 2px !important;
 }
 
 .loadingText::before {

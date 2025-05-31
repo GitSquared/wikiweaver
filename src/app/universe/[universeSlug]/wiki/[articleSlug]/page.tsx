@@ -1,9 +1,9 @@
-import ArticleRenderer from '@/components/ArticleRenderer';
 import { db } from '@/db';
 import { universe } from '@/db/schema/universe';
 import { unslugify } from '@/lib/slugify';
 import { weaveWikiArticle } from '@/lib/weave';
 import { eq } from 'drizzle-orm';
+import ArticleRenderer from './components/ArticleRenderer';
 
 export default async function WikiArticlePage({
 	params,

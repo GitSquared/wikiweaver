@@ -32,7 +32,7 @@ export default async function UniverseLayout({
 		.limit(1);
 
 	return (
-		<div className="flex flex-col min-h-screen">
+		<div className="flex flex-col min-h-screen gap-4">
 			<header className="bg-background flex flex-row items-center px-8 py-3 gap-8">
 				<Link href="/">
 					<div className="h-[50px] w-min grid grid-cols-[auto_auto] gap-x-3 gap-y-0.5">

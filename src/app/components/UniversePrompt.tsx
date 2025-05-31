@@ -21,6 +21,9 @@ const formSchema = z.object({
 		.min(10, {
 			message: "That's a bit short!",
 		})
+		.max(300, {
+			message: 'That is too long, please shorten it.',
+		})
 		.or(z.literal('')),
 });
 

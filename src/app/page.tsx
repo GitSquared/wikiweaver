@@ -10,8 +10,10 @@ async function makeUniverse(prompt: string): // returns slug
 Promise<string> {
 	'use server';
 
-	if (!prompt || prompt.length < 4) {
-		throw new Error('Prompt must be at least 4 characters long.');
+	if (!prompt || prompt.length < 10 || prompt.length > 300) {
+		throw new Error(
+			'Prompt must be at least 10 characters long and at most 300 characters long.',
+		);
 	}
 
 	const universeName = await weaveUniverseName({ prompt });

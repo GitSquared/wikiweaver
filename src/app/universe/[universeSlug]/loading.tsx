@@ -2,8 +2,8 @@ import Spinner from '@/components/Spinner';
 
 export default function LoadingPage() {
 	return (
-		<main className="flex h-screen items-center justify-center">
+		<div className="flex w-full h-full grow items-center justify-center">
 			<Spinner />
-		</main>
+		</div>
 	);
 }

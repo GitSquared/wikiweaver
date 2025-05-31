@@ -11,7 +11,18 @@ export const fontWiki = EB_Garamond({
 });
 
 export const metadata: Metadata = {
-	title: 'WikiWeaver',
+	metadataBase: new URL('https://wikiweaver.gaby.dev'),
+	title: {
+		default: 'WikiWeaver',
+		template: '%s | WikiWeaver',
+	},
+	description: "What if you had access to another universe's Wikipedia?",
+	authors: [
+		{
+			name: 'Gabriel Saillard',
+			url: 'https://gaby.dev',
+		},
+	],
 };
 
 export default function RootLayout({

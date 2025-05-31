@@ -1,5 +1,5 @@
 import { DEFAULT_MODEL } from '@/ai';
-import type { universe } from '@/db/schema/universe';
+import type { universes } from '@/db/schema/universe';
 import { generateObject, generateText } from 'ai';
 import z from 'zod';
 
@@ -20,9 +20,9 @@ export async function weaveUniverseName({
 }
 
 export async function weaveFirstArticleTitle({
-	verse,
+	universe,
 }: {
-	verse: typeof universe.$inferSelect;
+	universe: typeof universes.$inferSelect;
 }): Promise<string> {
 	const {
 		object: { title },
@@ -31,19 +31,22 @@ export async function weaveFirstArticleTitle({
 		schema: z.object({
 			title: z.string().min(4).max(50),
 		}),
-		prompt: `Generate a title for an article of a wiki within the universe "${verse.name}" based on its themes and lore. Here is a brief description of this universe: "${verse.prompt}". Invent any concept, event, place, object, character or so on that could warrant an encyclopedia article within that universe, and return the article's title. The title should be concise and fitting of a fictional encyclopedia.`,
+		prompt: `Generate a title for an article of a wiki within the universe "${universe.name}" based on its themes and lore. Here is a brief description of this universe: "${universe.prompt}". Invent any concept, event, place, object, character or so on that could warrant an encyclopedia article within that universe, and return the article's title. The title should be concise and fitting of a fictional encyclopedia.`,
 	});
 
 	return title;
 }
 
 export async function weaveWikiArticle({
-	verse,
+	universe,
 	title,
-}: { verse: typeof universe.$inferSelect; title: string }): Promise<string> {
-	const prompt = `You're writing an encyclopedia from a fictional universe. This universe is called "${verse.name}", and here is some information about it:
+}: {
+	universe: typeof universes.$inferSelect;
+	title: string;
+}): Promise<string> {
+	const prompt = `You're writing an encyclopedia from a fictional universe. This universe is called "${universe.name}", and here is some information about it:
 	
-	"${verse.prompt}"
+	"${universe.prompt}"
 
 	Now, write a detailed article about "${title}" as if it were a real historical event, place, object, cultural phenomenon or concept in that world.
 
@@ -51,7 +54,8 @@ export async function weaveWikiArticle({
 - Feel free to fabricate locations, names, timelines, and organizations.
 - Within the article content, wrap these invented names using double brackets like [[Name]]. These will be automatically turned into links.
 - Invent at least 5 such references, but no more than 30.
-- Keep the article in-universe and consistent with its lore. Do not mention the fictional universe's name or prompt directly.
+- Keep the article in-universe and consistent with its lore.
+- Do not mention the fictional universe's name or description directly.
 - Use markdown formatting for headings, lists, and emphasis.
 - Print the title of the article without any alteration.
 - Write an article of at least 500 words.

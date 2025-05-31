@@ -1,5 +1,5 @@
 import { db } from '@/db';
-import { universe } from '@/db/schema/universe';
+import { universes } from '@/db/schema/universe';
 import { slugify } from '@/lib/slugify';
 import { weaveUniverseName } from '@/lib/weave';
 import Home from './components/Home';
@@ -20,7 +20,7 @@ Promise<string> {
 
 	const slug = slugify(universeName);
 
-	await db.insert(universe).values({
+	await db.insert(universes).values({
 		name: universeName,
 		slug,
 		prompt,

@@ -1,6 +1,6 @@
 import MultiverseWindow from '@/components/MultiverseWindow';
 import { db } from '@/db';
-import { universe } from '@/db/schema/universe';
+import { universes } from '@/db/schema/universe';
 import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -25,14 +25,14 @@ export default async function UniverseLayout({
 }) {
 	const { universeSlug } = await params;
 
-	const [verse] = await db
+	const [universe] = await db
 		.select()
-		.from(universe)
-		.where(eq(universe.slug, universeSlug))
+		.from(universes)
+		.where(eq(universes.slug, universeSlug))
 		.limit(1);
 
 	return (
-		<div className="flex flex-col min-h-screen gap-4">
+		<div className="flex flex-col min-h-screen max-w-[60rem] mx-auto gap-4">
 			<header className="bg-background flex flex-row items-center px-8 py-3 gap-8">
 				<Link href="/">
 					<div className="h-[50px] w-min grid grid-cols-[auto_auto] gap-x-3 gap-y-0.5">
@@ -51,7 +51,7 @@ export default async function UniverseLayout({
 					<hr className="bg-slate-700 h-8 w-[1px] rotate-16" />
 					<Link href={`/universe/${universeSlug}`}>
 						<h1 className="text-medium font-medium select-none">
-							{verse.name} Wiki
+							{universe.name} Wiki
 						</h1>
 					</Link>
 				</div>

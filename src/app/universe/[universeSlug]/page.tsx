@@ -1,6 +1,6 @@
 import { db } from '@/db';
-import { article } from '@/db/schema/article';
-import { universe } from '@/db/schema/universe';
+import { articles } from '@/db/schema/article';
+import { universes } from '@/db/schema/universe';
 import { slugify } from '@/lib/slugify';
 import { weaveFirstArticleTitle } from '@/lib/weave';
 import { eq } from 'drizzle-orm';
@@ -9,20 +9,20 @@ import { notFound, redirect } from 'next/navigation';
 async function findArticleSlug(universeSlug: string): Promise<string> {
 	'use server';
 
-	const [verse] = await db
+	const [universe] = await db
 		.select()
-		.from(universe)
-		.where(eq(universe.slug, universeSlug))
+		.from(universes)
+		.where(eq(universes.slug, universeSlug))
 		.limit(1);
 
-	if (!verse) {
+	if (!universe) {
 		notFound();
 	}
 
 	const [firstArticle] = await db
 		.select()
-		.from(article)
-		.where(eq(article.universeId, verse.id))
+		.from(articles)
+		.where(eq(articles.universeId, universe.id))
 		.limit(1);
 
 	if (firstArticle) {
@@ -31,7 +31,7 @@ async function findArticleSlug(universeSlug: string): Promise<string> {
 
 	// No articles found, make the first one!
 	const title = await weaveFirstArticleTitle({
-		verse,
+		universe,
 	});
 
 	const slug = slugify(title);

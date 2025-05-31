@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import './globals.css';
+import { AnimatePresence } from 'motion/react';
 import { EB_Garamond } from 'next/font/google';
 import type { ReactNode } from 'react';
 
@@ -35,7 +36,7 @@ export default function RootLayout({
 			<Analytics />
 			<SpeedInsights />
 			<body className="bg-background text-foreground font-sans">
-				{children}
+				<AnimatePresence>{children}</AnimatePresence>
 			</body>
 		</html>
 	);

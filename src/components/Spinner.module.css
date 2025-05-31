@@ -1,5 +1,8 @@
 .fadeIn {
-	animation: fadeIn 0.5s ease-out;
+	animation: fadeIn 0.5s ease-out forwards;
+	/* Prevent showing too early if loading is quick */
+	opacity: 0;
+	animation-delay: 1s;
 }
 
 @keyframes fadeIn {

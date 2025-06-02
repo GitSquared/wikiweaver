@@ -20,7 +20,7 @@
 	border-color: var(--color-universe-blue) !important;
 }
 
-.spinner>span>* {
+.spinner > span > * {
 	border-width: 2px !important;
 }
 

@@ -31,7 +31,7 @@ function MultiverseWindow(
 			animate(
 				scope.current,
 				{
-					scale: 7,
+					scale: 12,
 				},
 				{
 					duration: 0.5,

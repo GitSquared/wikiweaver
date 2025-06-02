@@ -9,8 +9,6 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-	--font-serif: "EB Garamond", serif;
-	--font-sans: Arial, Helvetica, sans-serif;
 	--color-universe-blue: #3a61ff;
 	--color-article-link-visited: #3f31dd;
 

@@ -4,7 +4,7 @@ import { slugify } from '@/lib/slugify';
 import { weaveUniverseName } from '@/lib/weave';
 import Home from './components/Home';
 
-export const DEFAULT_UNIVERSE_SLUG = 'telepathica';
+export const DEFAULT_UNIVERSE_SLUG = 'datawood_realm';
 
 async function makeUniverse(prompt: string): // returns slug
 Promise<string> {

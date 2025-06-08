@@ -1,5 +1,5 @@
 import { DEFAULT_MODEL } from '@/ai';
-import type { universes } from '@/db/schema/universe';
+import type { Universe } from '@/db/schema/universe';
 import { generateObject, generateText } from 'ai';
 import z from 'zod';
 
@@ -22,7 +22,7 @@ export async function weaveUniverseName({
 export async function weaveFirstArticleTitle({
 	universe,
 }: {
-	universe: typeof universes.$inferSelect;
+	universe: Universe;
 }): Promise<string> {
 	const {
 		object: { title },
@@ -41,9 +41,11 @@ export async function weaveWikiArticle({
 	universe,
 	title,
 }: {
-	universe: typeof universes.$inferSelect;
+	universe: Universe;
 	title: string;
-}): Promise<string> {
+}): Promise<{
+	text: string;
+}> {
 	const prompt = `You're writing an encyclopedia from a fictional universe. This universe is called "${universe.name}", and here is some information about it:
 	
 	"${universe.prompt}"
@@ -64,10 +66,12 @@ export async function weaveWikiArticle({
 
 Begin the article now:`;
 
-	const { text: articleText } = await generateText({
+	const { text } = await generateText({
 		model: DEFAULT_MODEL,
 		prompt,
 	});
 
-	return articleText;
+	return {
+		text,
+	};
 }

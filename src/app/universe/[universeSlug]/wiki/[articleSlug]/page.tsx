@@ -1,6 +1,7 @@
 import { db } from '@/db';
 import { articles } from '@/db/schema/article';
 import { universes } from '@/db/schema/universe';
+import { indexArticle } from '@/lib/search';
 import { unslugify } from '@/lib/slugify';
 import { weaveWikiArticle } from '@/lib/weave';
 import { and, eq } from 'drizzle-orm';
@@ -23,7 +24,7 @@ async function findOrCreateArticle({
 		);
 
 	if (existingArticle) {
-		return existingArticle.articles.content;
+		return existingArticle.articles.text;
 	}
 
 	const title = unslugify(articleSlug);
@@ -38,7 +39,7 @@ async function findOrCreateArticle({
 		notFound();
 	}
 
-	const newArticleContent = await weaveWikiArticle({ universe, title });
+	const weavedArticle = await weaveWikiArticle({ universe, title });
 
 	await db
 		.insert(articles)
@@ -46,7 +47,7 @@ async function findOrCreateArticle({
 			universeId: universe.id,
 			slug: articleSlug,
 			title,
-			content: newArticleContent,
+			text: weavedArticle.text,
 		})
 		.onConflictDoNothing(); // If two generations happen simultaneously, keep the first one
 
@@ -57,12 +58,14 @@ async function findOrCreateArticle({
 		.where(eq(articles.slug, articleSlug))
 		.limit(1);
 
-	if (newArticle.content === newArticleContent) {
+	if (weavedArticle.text === newArticle.text) {
 		// Our generation was the one inserted!
-		console.log(`Weaved new article: ${universe.name} / ${title}`);
+		console.log(`Weaved new article: ${universe.name} / ${newArticle.title}`);
+
+		await indexArticle(newArticle);
 	}
 
-	return newArticle.content;
+	return newArticle.text;
 }
 
 export default async function WikiArticlePage({

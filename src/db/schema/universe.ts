@@ -7,3 +7,5 @@ export const universes = pgTable('universes', {
 	name: varchar({ length: 255 }).notNull(),
 	prompt: text().notNull(),
 });
+
+export type Universe = typeof universes.$inferSelect;

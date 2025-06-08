@@ -4,7 +4,7 @@ import { slugify } from '@/lib/slugify';
 import { motion, useAnimate } from 'motion/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import styles from './ArticleRenderer.module.css';
 
@@ -16,7 +16,7 @@ export default function ArticleRenderer({ children }: ArticleRendererProps) {
 	const router = useRouter();
 	const [scope, animate] = useAnimate();
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (scope.current) {
 			animate(scope.current, {
 				opacity: 1,

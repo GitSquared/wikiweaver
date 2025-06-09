@@ -13,7 +13,7 @@ export async function weaveUniverseName({
 		schema: z.object({
 			universeName: z.string().min(4).max(50),
 		}),
-		prompt: `Generate a name for a universe based on the following prompt: "${prompt}"`,
+		prompt: `Generate a name for a universe based on the following prompt: "${prompt}". The name should not be more than 50 characters long, and should be unique, memorable, and fitting for a fictional universe. Avoid using common words or phrases.`,
 	});
 
 	return universeName;
@@ -31,7 +31,7 @@ export async function weaveFirstArticleTitle({
 		schema: z.object({
 			title: z.string().min(4).max(50),
 		}),
-		prompt: `Generate a title for an article of a wiki within the universe "${universe.name}" based on its themes and lore. Here is a brief description of this universe: "${universe.prompt}". Invent any concept, event, place, object, character or so on that could warrant an encyclopedia article within that universe, and return the article's title. The title should be concise and fitting of a fictional encyclopedia.`,
+		prompt: `Generate a title for an article of a wiki within the universe "${universe.name}" based on its themes and lore. Here is a brief description of this universe: "${universe.prompt}". Invent any concept, event, place, object, character or so on that could warrant an encyclopedia article within that universe, and return the article's title. The title should be concise and fitting of a fictional encyclopedia, and in-lore. It should not be more than 50 characters long.`,
 	});
 
 	return title;

@@ -43,7 +43,7 @@ function MultiverseWindow(
 	return (
 		<motion.div
 			ref={scope}
-			className={cn(baseContainerClass, 'relative z-50')}
+			className={cn(baseContainerClass, 'relative')}
 			initial={{ opacity: 0, scale: 1 }}
 			whileInView={{
 				opacity: 1,

@@ -55,26 +55,31 @@ export default function SearchResults({
 		return <CommandEmpty>No results</CommandEmpty>;
 	}
 
-	return searchResults.map((result) => (
-		<CommandItem
-			key={result.article.id}
-			value={result.article.id}
-			onSelect={() => onSelect(result)}
-			className="flex flex-col gap-1 cursor-pointer items-start"
-		>
-			<span className="font-serif text-base font-medium">
-				{result.article.title}
-			</span>
-			{result.paragraphs.slice(0, 3).map((paragraph) => (
-				<blockquote
-					key={paragraph.id}
-					className="border-l-2 border-foreground/20 pl-2"
+	return (
+		<div className="flex flex-col gap-2 p-2">
+			{searchResults.map((result) => (
+				<CommandItem
+					key={result.article.id}
+					value={result.article.id}
+					onSelect={() => onSelect(result)}
+					onClick={() => onSelect(result)}
+					className="flex flex-col gap-1 cursor-pointer items-start"
 				>
-					<p className="text-sm line-clamp-2 italic text-muted-foreground">
-						{paragraph.text}
-					</p>
-				</blockquote>
+					<span className="font-serif text-base font-medium">
+						{result.article.title}
+					</span>
+					{result.paragraphs.slice(0, 3).map((paragraph) => (
+						<blockquote
+							key={paragraph.id}
+							className="border-l-2 border-foreground/20 pl-2"
+						>
+							<p className="text-sm line-clamp-2 italic text-muted-foreground">
+								{paragraph.text}
+							</p>
+						</blockquote>
+					))}
+				</CommandItem>
 			))}
-		</CommandItem>
-	));
+		</div>
+	);
 }

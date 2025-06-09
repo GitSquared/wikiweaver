@@ -22,7 +22,7 @@ export default function SearchBox({
 				ref={ref}
 				className="peer"
 			/>
-			<CommandShortcut className="sm:block group-focus-within: absolute top-0 right-0 h-full px-4 content-center transition-opacity opacity-50 peer-focus-within:opacity-0">
+			<CommandShortcut className="sm:hidden lg:block group-focus-within: absolute top-0 right-0 h-full px-4 content-center transition-opacity opacity-50 peer-focus-within:opacity-0">
 				⌘K
 			</CommandShortcut>
 		</div>

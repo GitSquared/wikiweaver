@@ -34,7 +34,7 @@ export default async function UniverseLayout({
 
 	return (
 		<div className="flex flex-col min-h-screen max-w-[60rem] mx-auto">
-			<header className="bg-background px-8 flex flex-row items-center justify-between">
+			<header className="bg-background px-8 flex flex-col lg:flex-row gap-2 items-center justify-between">
 				<div className="flex flex-row items-center py-3 gap-4">
 					<Link href="/">
 						<div className="h-[50px] w-min grid grid-cols-[auto_auto] gap-x-3 gap-y-0.5">

@@ -66,16 +66,16 @@ export default function UniversePrompt({
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(handleSubmit)}
-				className="flex flex-row items-center justify-center gap-2 max-w-full flex-wrap"
+				className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-2 w-full"
 			>
 				<FormField
 					control={form.control}
 					name="universePrompt"
 					render={({ field }) => (
-						<FormItem>
+						<FormItem className="w-full">
 							<FormControl>
 								<Input
-									className="min-w-[400px]"
+									className="w-full lg:w-sm text-sm md:text-base"
 									type="search"
 									placeholder={defaultPrompt}
 									disabled={loading}
@@ -86,7 +86,12 @@ export default function UniversePrompt({
 						</FormItem>
 					)}
 				/>
-				<Button variant="primary" type="submit" disabled={loading}>
+				<Button
+					variant="primary"
+					type="submit"
+					disabled={loading}
+					className="w-full lg:w-auto"
+				>
 					Explore
 					<ChevronRightIcon className="size-[20px]" />
 				</Button>

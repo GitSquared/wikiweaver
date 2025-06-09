@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { AnimatePresence } from 'motion/react';
 import { EB_Garamond, Noto_Sans } from 'next/font/google';
 import type { ReactNode } from 'react';
+import Footer from './components/Footer';
 
 const fontSerif = EB_Garamond({
 	display: 'swap',
@@ -43,15 +44,18 @@ export default function RootLayout({
 		<html lang="en">
 			<Analytics />
 			<SpeedInsights />
-			<body
-				className={cn(
-					fontSerif.variable,
-					fontSans.variable,
-					'bg-background text-foreground font-sans',
-				)}
-			>
-				<AnimatePresence>{children}</AnimatePresence>
-			</body>
+			<AnimatePresence>
+				<body
+					className={cn(
+						fontSerif.variable,
+						fontSans.variable,
+						'bg-background text-foreground font-sans',
+					)}
+				>
+					{children}
+					<Footer />
+				</body>
+			</AnimatePresence>
 		</html>
 	);
 }

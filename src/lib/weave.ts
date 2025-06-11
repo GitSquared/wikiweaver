@@ -2,6 +2,7 @@ import { DEFAULT_MODEL } from '@/ai';
 import type { Universe } from '@/db/schema/universe';
 import { generateObject, generateText } from 'ai';
 import z from 'zod';
+import { searchArticles } from './search';
 
 export async function weaveUniverseName({
 	prompt,
@@ -46,6 +47,11 @@ export async function weaveWikiArticle({
 }): Promise<{
 	text: string;
 }> {
+	const references = await searchArticles(universe.id, title).then((results) =>
+		// max 10
+		results.slice(0, 10),
+	);
+
 	const prompt = `You're writing an encyclopedia from a fictional universe. This universe is called "${universe.name}", and here is some information about it:
 	
 	"${universe.prompt}"
@@ -64,7 +70,25 @@ export async function weaveWikiArticle({
 - Keep internal logic and continuity consistent.
 - Avoid real-world facts unless twisted into the fiction.
 
+${
+	references.length > 0
+		? `Here's what's already been written about "${title}" in this universe:
+
+${references
+	.map(
+		(result) => `In an article titled "${result.article.title}":
+		${result.paragraphs.map((p) => `- ${p.text}`).join('\n')}`,
+	)
+	.join('\n\n')}
+
+Make sure to keep your new article coherent and consistent with this existing information.
+`
+		: ''
+}
+
 Begin the article now:`;
+
+	console.debug(prompt);
 
 	const { text } = await generateText({
 		model: DEFAULT_MODEL,

@@ -8,8 +8,10 @@
 - [x] Make website uncrawlable - robots.txt? Need to make sure it doesn't feed back on itself 😅
 - [x] Indexing and search to unlock ⤵️
 - [x] Give tools to article generator to read related articles and keep the world coherent
-- [  ] Fancy up article generation to avoid frustration on spinner: stream text, show articles read by ai?
+- [x] Fancy up article generation to avoid frustration on spinner: stream text?
 - [  ] Browse through articles in universe using search or list rather than only links
 - [  ] Biggest universes show up on homepage like wikipedia languages along with articles count?
 - [  ] User sign-in and save universes, pin articles..?
+- [  ] Article tags / metadata boxes like in Wikipedia
+- [  ] Article illustrations??
 - [  ] what next?

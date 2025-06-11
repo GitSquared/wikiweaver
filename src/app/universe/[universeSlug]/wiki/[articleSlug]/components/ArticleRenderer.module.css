@@ -29,6 +29,10 @@
 	line-height: var(--line-height-base);
 }
 
+.article p:not(:last-child) {
+	margin-bottom: var(--text-base);
+}
+
 .article a {
 	color: var(--color-universe-blue);
 	text-decoration: underline;

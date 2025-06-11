@@ -1,6 +1,6 @@
 import { DEFAULT_MODEL } from '@/ai';
 import type { Universe } from '@/db/schema/universe';
-import { generateObject, generateText } from 'ai';
+import { generateObject, streamText } from 'ai';
 import z from 'zod';
 import { searchArticles } from './search';
 
@@ -45,7 +45,7 @@ export async function weaveWikiArticle({
 	universe: Universe;
 	title: string;
 }): Promise<{
-	text: string;
+	textStream: ReturnType<typeof streamText>['textStream'];
 }> {
 	const references = await searchArticles(universe.id, title).then((results) =>
 		// max 10
@@ -88,14 +88,12 @@ Make sure to keep your new article coherent and consistent with this existing in
 
 Begin the article now:`;
 
-	console.debug(prompt);
-
-	const { text } = await generateText({
+	const { textStream } = streamText({
 		model: DEFAULT_MODEL,
 		prompt,
 	});
 
 	return {
-		text,
+		textStream,
 	};
 }

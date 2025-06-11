@@ -14,7 +14,7 @@ async function findOrCreateArticle({
 }: {
 	universeSlug: string;
 	articleSlug: string;
-}): Promise<string> {
+}) {
 	const [existingArticle] = await db
 		.select()
 		.from(articles)
@@ -41,31 +41,59 @@ async function findOrCreateArticle({
 
 	const weavedArticle = await weaveWikiArticle({ universe, title });
 
-	await db
-		.insert(articles)
-		.values({
-			universeId: universe.id,
-			slug: articleSlug,
-			title,
-			text: weavedArticle.text,
-		})
-		.onConflictDoNothing(); // If two generations happen simultaneously, keep the first one
+	const [clientStream, backendStream] = weavedArticle.textStream.tee();
 
-	// Get the generated article back, or the first one that was generated in case of conflicts
-	const [newArticle] = await db
-		.select()
-		.from(articles)
-		.where(eq(articles.slug, articleSlug))
-		.limit(1);
+	void (async () => {
+		const reader = backendStream.getReader();
+		let articleText = '';
 
-	if (weavedArticle.text === newArticle.text) {
-		// Our generation was the one inserted!
-		console.log(`Weaved new article: ${universe.name} / ${newArticle.title}`);
+		async function wrapUpArticle() {
+			await db
+				.insert(articles)
+				.values({
+					universeId: universe.id,
+					slug: articleSlug,
+					title,
+					text: articleText,
+				})
+				.onConflictDoNothing(); // If two generations happen simultaneously, keep the first one
 
-		await indexArticle(newArticle);
-	}
+			// Get the generated article back, or the first one that was generated in case of conflicts
+			const [newArticle] = await db
+				.select()
+				.from(articles)
+				.where(eq(articles.slug, articleSlug))
+				.limit(1);
 
-	return newArticle.text;
+			if (articleText === newArticle.text) {
+				// Our generation was the one inserted!
+				console.log(
+					`Weaved new article: ${universe.name} / ${newArticle.title}`,
+				);
+
+				await indexArticle(newArticle);
+			}
+
+			return newArticle.text;
+		}
+
+		function processChunk({ done, value }: ReadableStreamReadResult<string>) {
+			if (value) {
+				articleText += value;
+			}
+
+			if (done) {
+				void wrapUpArticle();
+				return;
+			}
+
+			reader.read().then(processChunk);
+		}
+
+		reader.read().then(processChunk);
+	})();
+
+	return clientStream;
 }
 
 export default async function WikiArticlePage({
@@ -75,10 +103,11 @@ export default async function WikiArticlePage({
 }) {
 	const { universeSlug, articleSlug } = await params;
 
-	const article = await findOrCreateArticle({
+	// Returns a ReadableStream
+	const article = findOrCreateArticle({
 		universeSlug,
 		articleSlug,
 	});
 
-	return <ArticleRenderer>{article}</ArticleRenderer>;
+	return <ArticleRenderer articleTextStream={article} />;
 }

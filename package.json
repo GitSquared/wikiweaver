@@ -7,9 +7,10 @@
 		"dev": "next dev --turbopack",
 		"build": "next build",
 		"start": "next start",
+		"push-db": "drizzle-kit push",
 		"lint": "biome check --fix",
 		"test": "vitest",
-		"push-db": "drizzle-kit push"
+		"typecheck": "tsc --noEmit"
 	},
 	"overrides": {
 		"react": "$react",

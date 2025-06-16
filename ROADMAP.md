@@ -9,9 +9,14 @@
 - [x] Indexing and search to unlock ⤵️
 - [x] Give tools to article generator to read related articles and keep the world coherent
 - [x] Fancy up article generation to avoid frustration on spinner: stream text?
-- [  ] Browse through articles in universe using search or list rather than only links
+- [  ] Browse through articles from universe page using search or list rather than default redirect
 - [  ] Biggest universes show up on homepage like wikipedia languages along with articles count?
+- [  ] How to publish this? OpenAI cost issues.
+  - [  ] Bring Your Own Key?
+  - [  ] Stripe paywall?
+  - [  ] Max. generations per user per day?
 - [  ] User sign-in and save universes, pin articles..?
+  - [  ] Go back to where you were browsing from homepage / History feature?
 - [  ] Article tags / metadata boxes like in Wikipedia
 - [  ] Article illustrations??
 - [  ] what next?

@@ -1,6 +1,6 @@
 'use client';
-import { CommandInput, CommandShortcut } from '@/components/ui/command';
 import type { Ref } from 'react';
+import { CommandInput, CommandShortcut } from '@/components/ui/command';
 
 interface SearchBoxProps {
 	query: string;

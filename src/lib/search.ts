@@ -1,8 +1,8 @@
 'use server';
+import { and, desc, eq, sql } from 'drizzle-orm';
 import { db } from '@/db';
 import { type Article, articles } from '@/db/schema/article';
 import { type Paragraph, paragraphs } from '@/db/schema/paragraph';
-import { and, desc, eq, sql } from 'drizzle-orm';
 
 function cutParagraphsForIndexing(articleText: string): string[] {
 	return (
@@ -16,7 +16,7 @@ function cutParagraphsForIndexing(articleText: string): string[] {
 			// ...bullet points
 			.map((p) => p.replaceAll(/ *- /g, ''))
 			// ...article links
-			.map((p) => p.replaceAll(/[\[\]]/g, ''))
+			.map((p) => p.replaceAll(/[[\]]/g, ''))
 			// ...markdown text formatting
 			.map((p) => p.replaceAll(/[_#*~]/g, ''))
 			// ...and trim whitespace again

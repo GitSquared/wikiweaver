@@ -1,8 +1,8 @@
 'use client';
-import { Command, CommandList } from '@/components/ui/command';
-import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useDeferredValue, useEffect, useRef, useState } from 'react';
+import { Command, CommandList } from '@/components/ui/command';
+import { cn } from '@/lib/utils';
 import SearchBox from './SearchBox';
 import SearchResults from './SearchResults';
 
@@ -59,7 +59,6 @@ export default function HeaderSearch({
 
 	return (
 		<>
-			{/* biome-ignore lint/a11y/useKeyWithClickEvents: kbd events handled above */}
 			<div
 				className={cn(
 					'fixed inset-0 bg-background/30 z-40',

@@ -1,9 +1,9 @@
 'use client';
 
+import { useEffect, useState, useTransition } from 'react';
 import { CommandEmpty, CommandItem } from '@/components/ui/command';
 import { Skeleton } from '@/components/ui/skeleton';
 import { type SearchArticlesResult, searchArticles } from '@/lib/search';
-import { useEffect, useState, useTransition } from 'react';
 
 interface SearchResultsProps {
 	universeId: string;

@@ -1,10 +1,10 @@
-import MultiverseWindow from '@/components/MultiverseWindow';
-import { db } from '@/db';
-import { universes } from '@/db/schema/universe';
 import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import MultiverseWindow from '@/components/MultiverseWindow';
+import { db } from '@/db';
+import { universes } from '@/db/schema/universe';
 import HeaderSearch from './components/HeaderSearch';
 
 export const metadata: Metadata = {

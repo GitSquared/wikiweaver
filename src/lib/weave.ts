@@ -1,12 +1,14 @@
-import { DEFAULT_MODEL } from '@/ai';
-import type { Universe } from '@/db/schema/universe';
 import { generateObject, streamText } from 'ai';
 import z from 'zod';
+import { DEFAULT_MODEL } from '@/ai';
+import type { Universe } from '@/db/schema/universe';
 import { searchArticles } from './search';
 
 export async function weaveUniverseName({
 	prompt,
-}: { prompt: string }): Promise<string> {
+}: {
+	prompt: string;
+}): Promise<string> {
 	const {
 		object: { universeName },
 	} = await generateObject({

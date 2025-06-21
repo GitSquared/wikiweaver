@@ -1,8 +1,8 @@
+import { count } from 'drizzle-orm';
+import type { ReactNode } from 'react';
 import { db } from '@/db';
 import { articles } from '@/db/schema/article';
 import { universes } from '@/db/schema/universe';
-import { count } from 'drizzle-orm';
-import type { ReactNode } from 'react';
 
 export default async function Footer() {
 	const { count: nbArticles } = await db
@@ -22,7 +22,7 @@ export default async function Footer() {
 	}
 
 	return (
-		<footer className="w-screen bg-accent border-t border-accent-foreground/10">
+		<footer className="w-screen bg-accent mt-12 border-t border-accent-foreground/10">
 			<div className="max-w-[60rem] mx-auto p-8 flex flex-col gap-6 md:grid md:grid-cols-2 md:items-start">
 				<FooterParagraph>
 					made by <FooterLink href="https://gaby.dev">gaby</FooterLink> in Paris
@@ -58,10 +58,6 @@ function FooterLink({ href, children }: { href: string; children: ReactNode }) {
 	);
 }
 
-function FooterParagraph({
-	children,
-}: {
-	children: ReactNode;
-}) {
+function FooterParagraph({ children }: { children: ReactNode }) {
 	return <p className="text-xs text-muted-foreground max-w-sm">{children}</p>;
 }

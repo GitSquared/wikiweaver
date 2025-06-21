@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.0.4/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -7,33 +7,49 @@
 		"defaultBranch": "main" // This unlocks additional flags like checking only --changed or --staged
 	},
 	"files": {
-		"include": [
-			"src/**/*.ts",
-			"src/**/*.tsx",
-			"src/**/*.css",
-			"src/**/*.json",
-			"./*.ts",
-			"./*.js",
-			"./*.mjs",
-			"./*.json",
-			"./*.jsonc"
+		"includes": [
+			"**/src/**/*.ts",
+			"**/src/**/*.tsx",
+			"**/src/**/*.css",
+			"**/src/**/*.json",
+			"**/*.ts",
+			"**/*.js",
+			"**/*.mjs",
+			"**/*.json",
+			"**/*.jsonc"
 		],
-		"ignoreUnknown": false,
-		"ignore": []
+		"ignoreUnknown": false
 	},
 	"formatter": {
 		"enabled": true,
 		"indentStyle": "tab"
 	},
-	"organizeImports": {
-		"enabled": true
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"recommended": true,
+			"a11y": "off",
 			"correctness": {
 				"noUnusedImports": "warn"
+			},
+			"style": {
+				"noParameterAssign": "error",
+				"useAsConstAssertion": "error",
+				"useDefaultParameterLast": "error",
+				"useEnumInitializers": "error",
+				"useSelfClosingElements": "error",
+				"useSingleVarDeclarator": "error",
+				"noUnusedTemplateLiteral": "error",
+				"useNumberNamespace": "error",
+				"noInferrableTypes": "error",
+				"noUselessElse": "error"
 			}
 		}
 	},

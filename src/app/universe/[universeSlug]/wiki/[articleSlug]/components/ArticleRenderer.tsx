@@ -1,11 +1,11 @@
 'use client';
 
-import { slugify } from '@/lib/slugify';
 import { motion, useAnimate } from 'motion/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useLayoutEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { slugify } from '@/lib/slugify';
 import styles from './ArticleRenderer.module.css';
 
 interface ArticleRendererProps {
@@ -28,51 +28,50 @@ export default function ArticleRenderer({
 		}
 
 		(async () => {
-
-		console.log('Processing article stream...');
-
-		if (articleStream.locked) {
-			// Maybe just being released by an earlier effect render
-			console.log('Article stream is locked, waiting for it to unlock...');
-			await new Promise((resolve) => setTimeout(resolve, 100));
+			console.log('Processing article stream...');
 
 			if (articleStream.locked) {
-				console.warn('Article stream is still locked, skipping processing.');
-				return;
-			}
-		}
+				// Maybe just being released by an earlier effect render
+				console.log('Article stream is locked, waiting for it to unlock...');
+				await new Promise((resolve) => setTimeout(resolve, 100));
 
-		let cancelled = false;
-		const reader = articleStream.getReader();
-
-		function processChunk({ done, value }: ReadableStreamReadResult<string>) {
-			if (cancelled) {
-				return;
+				if (articleStream.locked) {
+					console.warn('Article stream is still locked, skipping processing.');
+					return;
+				}
 			}
 
-			if (value) {
-				setReceivedArticleText((prev) => prev + value);
-			}
+			let cancelled = false;
+			const reader = articleStream.getReader();
 
-			if (done) {
-				// Refresh in the background to ensure we show the article generation that
-				// was committed to the database
-				console.info('Article stream is over, refreshing data to sync...')
-				router.refresh();
-				return;
+			function processChunk({ done, value }: ReadableStreamReadResult<string>) {
+				if (cancelled) {
+					return;
+				}
+
+				if (value) {
+					setReceivedArticleText((prev) => prev + value);
+				}
+
+				if (done) {
+					// Refresh in the background to ensure we show the article generation that
+					// was committed to the database
+					console.info('Article stream is over, refreshing data to sync...');
+					router.refresh();
+					return;
+				}
+
+				reader.read().then(processChunk);
 			}
 
 			reader.read().then(processChunk);
-		}
 
-		reader.read().then(processChunk);
-
-		return () => {
-			cancelled = true;
-			reader.releaseLock();
-			reader.cancel();
-		};
-})()
+			return () => {
+				cancelled = true;
+				reader.releaseLock();
+				reader.cancel();
+			};
+		})();
 	}, [articleStream, router]);
 
 	const [scope, animate] = useAnimate();

@@ -1,11 +1,11 @@
+import { and, eq } from 'drizzle-orm';
+import { notFound } from 'next/navigation';
 import { db } from '@/db';
 import { articles } from '@/db/schema/article';
 import { universes } from '@/db/schema/universe';
 import { indexArticle } from '@/lib/search';
 import { unslugify } from '@/lib/slugify';
 import { weaveWikiArticle } from '@/lib/weave';
-import { and, eq } from 'drizzle-orm';
-import { notFound } from 'next/navigation';
 import ArticleRenderer from './components/ArticleRenderer';
 
 async function findOrCreateArticle({

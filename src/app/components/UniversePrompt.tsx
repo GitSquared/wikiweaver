@@ -1,7 +1,9 @@
 'use client';
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
 import { Button } from '@/components/ui/button';
 import {
 	Form,
@@ -11,9 +13,6 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 
 const formSchema = z.object({
 	universePrompt: z

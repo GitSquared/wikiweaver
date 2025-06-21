@@ -1,10 +1,10 @@
+import { eq } from 'drizzle-orm';
+import { notFound, redirect } from 'next/navigation';
 import { db } from '@/db';
 import { articles } from '@/db/schema/article';
 import { universes } from '@/db/schema/universe';
 import { slugify } from '@/lib/slugify';
 import { weaveFirstArticleTitle } from '@/lib/weave';
-import { eq } from 'drizzle-orm';
-import { notFound, redirect } from 'next/navigation';
 
 async function findArticleSlug(universeSlug: string): Promise<string> {
 	'use server';

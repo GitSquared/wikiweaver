@@ -3,6 +3,7 @@ import { universes } from '@/db/schema/universe';
 import { slugify } from '@/lib/slugify';
 import { weaveUniverseName } from '@/lib/weave';
 import Home from './components/Home';
+import TopUniverses from './components/TopUniverses';
 
 const DEFAULT_UNIVERSE_SLUG = 'datawood-realm';
 
@@ -31,9 +32,13 @@ Promise<string> {
 
 export default async function HomePage() {
 	return (
-		<Home
-			onMakeUniverse={makeUniverse}
-			defaultUniverseSlug={DEFAULT_UNIVERSE_SLUG}
-		/>
+		<div className="flex flex-col items-center lg:flex-row lg:justify-center gap-8">
+			<Home
+				onMakeUniverse={makeUniverse}
+				defaultUniverseSlug={DEFAULT_UNIVERSE_SLUG}
+			/>
+			<hr className="border border-foreground/10 w-lg lg:w-0 lg:h-[40vh]" />
+			<TopUniverses />
+		</div>
 	);
 }

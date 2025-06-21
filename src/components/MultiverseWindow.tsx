@@ -1,9 +1,9 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import { motion, useAnimate } from 'motion/react';
 import { forwardRef, useImperativeHandle } from 'react';
 import { Tranquiluxe } from 'uvcanvas';
+import { cn } from '@/lib/utils';
 
 interface MultiverseWindowProps {
 	size: string; // tailwind size- class, e.g 'size-[250px]' or 'size-[100px]'

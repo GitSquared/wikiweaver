@@ -97,6 +97,7 @@ export default function HeaderSearch({
 								);
 								setQuery('');
 								searchInputRef.current?.blur();
+								setIsFocused(false);
 							}}
 						/>
 					</CommandList>

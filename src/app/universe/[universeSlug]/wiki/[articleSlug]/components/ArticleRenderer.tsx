@@ -27,7 +27,20 @@ export default function ArticleRenderer({
 			return;
 		}
 
-		if (articleStream.locked) return;
+		(async () => {
+
+		console.log('Processing article stream...');
+
+		if (articleStream.locked) {
+			// Maybe just being released by an earlier effect render
+			console.log('Article stream is locked, waiting for it to unlock...');
+			await new Promise((resolve) => setTimeout(resolve, 100));
+
+			if (articleStream.locked) {
+				console.warn('Article stream is still locked, skipping processing.');
+				return;
+			}
+		}
 
 		let cancelled = false;
 		const reader = articleStream.getReader();
@@ -44,6 +57,7 @@ export default function ArticleRenderer({
 			if (done) {
 				// Refresh in the background to ensure we show the article generation that
 				// was committed to the database
+				console.info('Article stream is over, refreshing data to sync...')
 				router.refresh();
 				return;
 			}
@@ -55,8 +69,10 @@ export default function ArticleRenderer({
 
 		return () => {
 			cancelled = true;
+			reader.releaseLock();
 			reader.cancel();
 		};
+})()
 	}, [articleStream, router]);
 
 	const [scope, animate] = useAnimate();

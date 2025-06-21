@@ -29,6 +29,8 @@ async function findOrCreateArticle({
 
 	const title = unslugify(articleSlug);
 
+	console.log(`Starting to weave new article: ${universeSlug} / ${title}`);
+
 	const [universe] = await db
 		.select()
 		.from(universes)

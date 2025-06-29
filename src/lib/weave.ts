@@ -10,14 +10,19 @@ export async function weaveUniverseName({
 	prompt: string;
 }): Promise<string> {
 	const {
-		object: { universeName },
+		object: { universeName, shouldAbort },
 	} = await generateObject({
 		model: DEFAULT_MODEL,
 		schema: z.object({
 			universeName: z.string().min(4).max(50),
+			shouldAbort: z.boolean().optional(),
 		}),
-		prompt: `Generate a name for a universe based on the following prompt: "${prompt}". The name should not be more than 50 characters long, and should be unique, memorable, and fitting for a fictional universe. Avoid using common words or phrases.`,
+		prompt: `Generate a name for a universe based on the following prompt: "${prompt}". The name should be no more than 50 characters long, and should be unique, memorable, and fitting for a fictional universe. Avoid using common words or phrases. You can also raise the shouldAbort flag, by returning shouldAbort = true, if you believe that prompt to be harmful, inappropriate, or other unsuitable for a public wiki. If you raise this flag, also return "ABORT" as the universeName.`,
 	});
+
+	if (shouldAbort || universeName === 'ABORT') {
+		throw new Error(`Harmful prompt detected: ${prompt}. Please be cool.`);
+	}
 
 	return universeName;
 }

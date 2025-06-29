@@ -30,6 +30,8 @@ Promise<string> {
 	return slug;
 }
 
+export const revalidate = 300; // revalidate every 5 minutes to keep the top universes ranking fresh
+
 export default async function HomePage() {
 	return (
 		<div className="flex flex-col items-center lg:flex-row lg:justify-center gap-8">

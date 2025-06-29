@@ -17,7 +17,27 @@ export async function weaveUniverseName({
 			universeName: z.string().min(4).max(50),
 			shouldAbort: z.boolean().optional(),
 		}),
-		prompt: `Generate a name for a universe based on the following prompt: "${prompt}". The name should be no more than 50 characters long, and should be unique, memorable, and fitting for a fictional universe. Avoid using common words or phrases. You can also raise the shouldAbort flag, by returning shouldAbort = true, if you believe that prompt to be harmful, inappropriate, or other unsuitable for a public wiki. If you raise this flag, also return "ABORT" as the universeName.`,
+		prompt: `
+Generate a name for a universe based on the following prompt:
+
+---
+
+${prompt}
+
+---
+
+The name should be no more than 50 characters long, and should be unique, memorable, and fitting for a fictional universe. Avoid using common words or phrases.
+
+You can also raise the shouldAbort flag, by returning shouldAbort = true, if you believe that prompt to be harmful, inappropriate, or other unsuitable for a public wiki. If you raise this flag, also return "ABORT" as the universeName.
+Here is a non-exhaustive list of content that should be considered inappropriate:
+
+- Hate speech or discrimination
+- Violence or glorification of violence
+- Sexual content, including erotica
+- References to real life tragedies or disasters
+- Reference to real life conspiracy theories or misinformation
+- Content related to current wars, conflicts, or political situations
+- Content related to past or current totalitarian regimes or dictatorships`,
 	});
 
 	if (shouldAbort || universeName === 'ABORT') {

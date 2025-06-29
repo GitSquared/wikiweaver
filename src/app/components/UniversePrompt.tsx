@@ -71,10 +71,10 @@ export default function UniversePrompt({
 					control={form.control}
 					name="universePrompt"
 					render={({ field }) => (
-						<FormItem className="w-full">
+						<FormItem className="flex flex-col w-full">
 							<FormControl>
 								<Input
-									className="w-full lg:w-sm text-sm md:text-base"
+									className="w-full lg:w-sm text-sm"
 									type="search"
 									placeholder={defaultPrompt}
 									disabled={loading}

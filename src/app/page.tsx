@@ -34,7 +34,7 @@ export const revalidate = 300; // revalidate every 5 minutes to keep the top uni
 
 export default async function HomePage() {
 	return (
-		<div className="flex flex-col items-center lg:flex-row lg:justify-center gap-8">
+		<div className="flex flex-col items-center lg:flex-row lg:justify-center gap-8 lg:gap-12">
 			<Home
 				onMakeUniverse={makeUniverse}
 				defaultUniverseSlug={DEFAULT_UNIVERSE_SLUG}

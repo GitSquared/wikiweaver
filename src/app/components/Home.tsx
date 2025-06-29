@@ -47,7 +47,7 @@ export default function Home({
 	};
 
 	return (
-		<main className="flex flex-col items-center justify-center min-h-[80vh] max-w-full gap-12 p-4">
+		<main className="flex flex-col items-center justify-center min-h-[85vh] max-w-full gap-12 p-4">
 			<div className="flex flex-col items-center gap-1">
 				<h1 className="text-5xl font-serif font-semibold">WikiWeaver</h1>
 				<h2 className="text-2xl font-serif font-medium">Weave new worlds</h2>

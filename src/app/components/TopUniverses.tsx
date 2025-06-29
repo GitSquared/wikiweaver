@@ -18,8 +18,8 @@ export default async function TopUniverses() {
 		.limit(5);
 
 	return (
-		<aside className="max-w-2xl">
-			<h2 className="text-2xl font-semibold px-4">Top Universes</h2>
+		<aside className="max-w-lg fade-in delay-1000">
+			<h2 className="text-xl font-semibold px-4">Explore Top Universes</h2>
 			<ol className="flex flex-col mt-4">
 				{topUniverses.map(({ universes: universe, articleCount }) => (
 					<Link
@@ -29,7 +29,7 @@ export default async function TopUniverses() {
 						prefetch={false}
 					>
 						<li className="grid grid-cols-[1fr_auto] items-center gap-2 p-4 rounded-md cursor-pointer hover:bg-accent group">
-							<h3 className="font-medium">
+							<h3 className="text-sm font-medium">
 								{universe.name}{' '}
 								<span className="font-normal text-muted-foreground">
 									— {articleCount} articles

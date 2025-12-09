@@ -16,10 +16,16 @@
 
 See **AI_MODEL_OPENAI_OPTIONS.md** for detailed OpenAI-only recommendations.
 
-**Quick OpenAI Options:**
+**Quick OpenAI Options (Available Now):**
 - **GPT-4o:** Better quality, 17x cost ($13.75/1K articles) - drop-in upgrade
 - **Hybrid approach:** GPT-4o for articles, mini for other tasks - 4x cost ($3.34/1K articles)
 - **Better embeddings:** text-embedding-3-large - minimal cost increase
+
+**🚀 Coming Soon: GPT-5 Variants (Q1 2025)**
+- **gpt-5-mini:** Expected successor to gpt-4o-mini with better performance
+- **gpt-5-nano/lite/flash:** Ultra-lightweight for high-volume scenarios
+- Drop-in replacements with likely similar pricing
+- See OpenAI options doc for details
 
 ---
 

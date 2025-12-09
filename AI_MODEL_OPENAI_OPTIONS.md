@@ -37,7 +37,35 @@ export const DEFAULT_EMBEDDING_DIMENSIONS = 1536;
 
 ---
 
-## Recommended OpenAI Options
+## 🚀 Future: GPT-5 Models (Coming Soon)
+
+OpenAI is expected to release GPT-5 models in early 2025, with a simplified naming strategy:
+
+### Expected GPT-5 Variants
+
+| Model | Expected Features | Likely Use Case for WikiWeaver |
+|-------|------------------|-------------------------------|
+| **gpt-5** (Standard) | Flagship model, highest reasoning | Premium quality if cost permits |
+| **gpt-5-mini** | Cost-efficient, faster than standard | Likely successor to gpt-4o-mini |
+| **gpt-5-nano** (or gpt-5-lite/flash) | Ultra-lightweight, fastest | Edge cases, high-volume scenarios |
+
+**What to expect:**
+- **Unified naming:** Clearer model names (no more "o", "turbo" suffixes)
+- **Better performance:** Improved reasoning, coding, and creative writing
+- **Competitive pricing:** Mini/nano variants likely priced similar to current 4o-mini
+- **400k context window:** Larger context for better article coherence
+- **Multimodal:** Enhanced image understanding (future illustrations?)
+
+**When available:** GPT-5 models are rumored for Q1 2025 launch. Once released:
+- **gpt-5-mini** would be a drop-in replacement for `gpt-4o-mini`
+- Likely similar pricing to maintain competitive position
+- Expected performance improvements without code changes
+
+**Recommendation:** Monitor OpenAI's announcements. When GPT-5-mini launches, test it against gpt-4o-mini for quality and cost comparison.
+
+---
+
+## Recommended OpenAI Options (Current)
 
 ### Option 1: GPT-4o (Quality Upgrade) ✨
 
@@ -398,6 +426,9 @@ A: Check your OpenAI dashboard, or integrate observability tools like Helicone o
 **Q: Can I mix models in the same article generation?**  
 A: Not directly, but you could use GPT-4o for the main content and mini for related suggestions.
 
+**Q: What about GPT-5? Should I wait for it?**  
+A: GPT-5 models (including gpt-5-mini) are expected in Q1 2025. They should be drop-in replacements with better performance. You can upgrade when available without waiting - current models work great. See the "Future: GPT-5 Models" section above for details.
+
 ---
 
 ## Next Steps
@@ -408,6 +439,7 @@ A: Not directly, but you could use GPT-4o for the main content and mini for rela
 4. **Measure impact:** Cost, speed, quality
 5. **Deploy gradually:** Maybe start with 10% of traffic
 6. **Monitor and adjust**
+7. **Watch for GPT-5:** When released, test gpt-5-mini as a potential upgrade
 
 ## Resources
 

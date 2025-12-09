@@ -23,7 +23,27 @@ export const DEFAULT_EMBEDDING_MODEL = openai.embedding('text-embedding-3-small'
 
 ## Alternative Model Options
 
-### 1. **OpenAI GPT-4o** (Upgrade)
+### 🚀 Future: OpenAI GPT-5 Models (Expected Q1 2025)
+
+OpenAI is expected to release GPT-5 models in early 2025 with simplified naming:
+
+**Expected variants:**
+- **gpt-5** (Standard) - Flagship model
+- **gpt-5-mini** - Cost-efficient successor to gpt-4o-mini
+- **gpt-5-nano** (or lite/flash) - Ultra-lightweight variant
+
+**Key improvements:**
+- Better creative writing and reasoning
+- 400k context window (vs 128k)
+- Simplified naming convention
+- Competitive pricing on mini/nano variants
+- Drop-in replacement for existing models
+
+**For WikiWeaver:** When available, gpt-5-mini would likely be the ideal successor to gpt-4o-mini with better quality at similar cost. Monitor OpenAI announcements for release.
+
+---
+
+### 1. **OpenAI GPT-4o** (Current Upgrade)
 
 **Best for:** Higher quality output with more nuanced creative writing
 

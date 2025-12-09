@@ -161,7 +161,7 @@ export async function weaveFirstArticleTitle({ universe }: { universe: Universe 
 }
 ```
 
-**Cost Impact:** ~4x increase ($0.83 → $3.50 per 1K articles)
+**Cost Impact:** ~4x increase ($0.84 → $3.34 per 1K articles)
 - 60% of the benefit of full GPT-4o at 25% of the cost increase
 
 ---

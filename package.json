@@ -45,8 +45,7 @@
 		"tailwind-merge": "^3.3.1",
 		"tailwindcss": "^4.1.10",
 		"uvcanvas": "^0.3.0",
-		"vite": "^7.2.7",
-		"zod": "^3.25.67"
+		"zod": "^4.1.13"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.8",

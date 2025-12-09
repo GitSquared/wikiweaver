@@ -31,8 +31,8 @@ npm run push-db
 ## Architecture
 
 **Tech Stack:**
-- Next.js 15.3.4 with App Router
-- React 19 with TypeScript 5
+- Next.js 16.0.8 with App Router (Turbopack default)
+- React 19.2.1 with TypeScript 5.9.3
 - PostgreSQL with Drizzle ORM
 - OpenAI GPT-4o-mini for content generation
 - Tailwind CSS 4 for styling

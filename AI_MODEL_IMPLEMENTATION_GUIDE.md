@@ -88,7 +88,9 @@ If you switch to Google's embeddings, you need to update the embedding dimension
 
 ```typescript
 // src/db/schema/paragraph.ts
-// Change from 1536 to 768 if using Google embeddings
+// Find the embedding vector field definition (likely uses pgvector)
+// Change the dimension from 1536 to 768 for Google embeddings
+// Example: vector('embedding', { dimensions: 768 })
 ```
 
 Then push the database changes:
@@ -96,6 +98,8 @@ Then push the database changes:
 ```bash
 npm run push-db
 ```
+
+**Important:** This is a breaking change. Existing embeddings in the database will need to be regenerated or migrated.
 
 **Step 4:** Add API key
 
@@ -232,7 +236,14 @@ const result = await streamText({
 // Log usage after completion
 result.usage.then(usage => {
 	console.log('Tokens used:', usage.totalTokens);
-	console.log('Cost estimate:', usage.totalTokens * COST_PER_TOKEN);
+	
+	// Calculate cost based on your model
+	// Example rates (per million tokens):
+	// GPT-4o-mini: input $0.15, output $0.60
+	// Claude Haiku: input $0.80, output $4.00
+	const inputCost = usage.promptTokens * (0.15 / 1_000_000); // Adjust rate
+	const outputCost = usage.completionTokens * (0.60 / 1_000_000); // Adjust rate
+	console.log('Cost estimate:', inputCost + outputCost);
 });
 ```
 

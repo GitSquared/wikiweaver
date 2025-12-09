@@ -63,6 +63,7 @@ export const DEFAULT_MODEL = google('gemini-2.0-flash-exp');
 export const DEFAULT_EMBEDDING_MODEL = google.textEmbeddingModel('text-embedding-004');
 export const DEFAULT_EMBEDDING_DIMENSIONS = 768; // Changed from 1536
 ```
+**Note:** Changing embedding dimensions requires database schema updates and regenerating existing embeddings. See implementation guide for details.
 
 ---
 

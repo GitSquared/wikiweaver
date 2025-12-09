@@ -219,8 +219,15 @@ import { openai } from '@ai-sdk/openai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
 
+type SupportedModel = 
+	| 'gpt-4o'
+	| 'gpt-4o-mini'
+	| 'claude-3-5-sonnet'
+	| 'claude-3-5-haiku'
+	| 'gemini-2.0-flash';
+
 const getModel = () => {
-	const modelName = process.env.AI_MODEL || 'gpt-4o-mini';
+	const modelName = (process.env.AI_MODEL || 'gpt-4o-mini') as SupportedModel;
 	
 	switch (modelName) {
 		case 'gpt-4o':
@@ -262,7 +269,7 @@ Assuming average article generation:
 | Gemini 2.0 Flash | $0.11 | $0.30 | **$0.41** |
 | Grok Beta | $7.50 | $15.00 | **$22.50** |
 
-**Recommendation for your roadmap:** Consider Gemini 2.0 Flash or keep GPT-4o-mini for cost management, especially given the "How to cover OpenAI costs?" item in your roadmap. You could also implement a BYOK (Bring Your Own Key) feature that lets users choose their preferred model!
+**Cost Management Recommendations:** Consider Gemini 2.0 Flash or keep GPT-4o-mini for cost management. For production deployments with cost concerns, you could also implement a BYOK (Bring Your Own Key) feature that lets users choose their preferred model, or implement usage-based rate limiting.
 
 ---
 

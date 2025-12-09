@@ -18,10 +18,10 @@ const formSchema = z.object({
 	universePrompt: z
 		.string()
 		.min(10, {
-			message: "That's a bit short!",
+			error: "That's a bit short!",
 		})
 		.max(300, {
-			message: 'That is too long, please shorten it.',
+			error: 'That is too long, please shorten it.',
 		})
 		.or(z.literal('')),
 });

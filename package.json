@@ -45,6 +45,7 @@
 		"tailwind-merge": "^3.3.1",
 		"tailwindcss": "^4.1.10",
 		"uvcanvas": "^0.3.0",
+		"vite": "^7.2.7",
 		"zod": "^3.25.67"
 	},
 	"devDependencies": {
@@ -56,6 +57,6 @@
 		"tw-animate-css": "^1.3.4",
 		"typescript": "^5.9.3",
 		"vercel": "^49.1.2",
-		"vitest": "^3.2.4"
+		"vitest": "^4.0.15"
 	}
 }

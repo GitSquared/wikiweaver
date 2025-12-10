@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-WikiWeaver is an AI-powered web application that creates an "infinite, LLM-hallucinated Wikipedia" allowing users to browse wikis of parallel universes. Built with Next.js 15 and React 19, it dynamically generates fictional encyclopedia articles using OpenAI's GPT-4o-mini.
+WikiWeaver is an AI-powered web application that creates an "infinite, LLM-hallucinated Wikipedia" allowing users to browse wikis of parallel universes. Built with Next.js 15 and React 19, it dynamically generates fictional encyclopedia articles using OpenAI's GPT-5-mini.
 
 ## Development Commands
 
@@ -34,7 +34,7 @@ npm run push-db
 - Next.js 16.0.8 with App Router (Turbopack default)
 - React 19.2.1 with TypeScript 5.9.3
 - PostgreSQL with Drizzle ORM
-- OpenAI GPT-4o-mini for content generation
+- OpenAI GPT-5-mini for content generation
 - Tailwind CSS 4 for styling
 - Biome for linting/formatting
 

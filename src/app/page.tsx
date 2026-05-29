@@ -7,27 +7,52 @@ import TopUniverses from './components/TopUniverses';
 
 const DEFAULT_UNIVERSE_SLUG = 'datawood-realm';
 
+type MakeUniverseResult =
+	| { ok: true; slug: string }
+	| { ok: false; error: string };
+
 async function makeUniverse(prompt: string): // returns slug
-Promise<string> {
+Promise<MakeUniverseResult> {
 	'use server';
 
 	if (!prompt || prompt.length < 10 || prompt.length > 300) {
-		throw new Error(
-			'Prompt must be at least 10 characters long and at most 300 characters long.',
-		);
+		return {
+			ok: false,
+			error:
+				'Prompt must be at least 10 characters long and at most 300 characters long.',
+		};
 	}
 
-	const universeName = await weaveUniverseName({ prompt });
+	try {
+		const universeName = await weaveUniverseName({ prompt });
 
-	const slug = slugify(universeName);
+		const slug = slugify(universeName);
 
-	await db.insert(universes).values({
-		name: universeName,
-		slug,
-		prompt,
-	});
+		await db.insert(universes).values({
+			name: universeName,
+			slug,
+			prompt,
+		});
 
-	return slug;
+		return { ok: true, slug };
+	} catch (error) {
+		if (
+			error instanceof Error &&
+			error.message.startsWith('Harmful prompt detected:')
+		) {
+			return {
+				ok: false,
+				error: 'This prompt was rejected by the content safety check.',
+			};
+		}
+
+		console.error('Failed to create universe', error);
+
+		return {
+			ok: false,
+			error: 'An error occurred while creating the universe.',
+		};
+	}
 }
 
 export const revalidate = 300; // revalidate every 5 minutes to keep the top universes ranking fresh

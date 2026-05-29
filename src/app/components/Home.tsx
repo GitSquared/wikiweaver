@@ -8,8 +8,12 @@ import MultiverseWindow, {
 } from '@/components/MultiverseWindow';
 import UniversePrompt from './UniversePrompt';
 
+type MakeUniverseResult =
+	| { ok: true; slug: string }
+	| { ok: false; error: string };
+
 interface HomeProps {
-	onMakeUniverse: (prompt: string) => Promise<string>;
+	onMakeUniverse: (prompt: string) => Promise<MakeUniverseResult>;
 	defaultUniverseSlug: string;
 }
 
@@ -30,8 +34,13 @@ export default function Home({
 	const onSubmit = async (prompt: string) => {
 		setError(null);
 		try {
-			const slug = await onMakeUniverse(prompt);
-			await navigateToUniverse(slug);
+			const result = await onMakeUniverse(prompt);
+			if (!result.ok) {
+				setError(result.error);
+				return;
+			}
+
+			await navigateToUniverse(result.slug);
 		} catch (err) {
 			setError(
 				(err as Error)?.message ||

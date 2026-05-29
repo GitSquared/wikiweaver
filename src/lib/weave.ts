@@ -1,6 +1,6 @@
 import { generateObject, streamText } from 'ai';
 import z from 'zod';
-import { DEFAULT_MODEL } from '@/ai';
+import { DEFAULT_MODEL, FAST_MODEL } from '@/ai';
 import type { Universe } from '@/db/schema/universe';
 import { searchArticles } from './search';
 
@@ -12,7 +12,7 @@ export async function weaveUniverseName({
 	const {
 		object: { universeName, shouldAbort },
 	} = await generateObject({
-		model: DEFAULT_MODEL,
+		model: FAST_MODEL,
 		schema: z.object({
 			universeName: z.string().min(4).max(50),
 			shouldAbort: z.boolean().optional(),
@@ -55,7 +55,7 @@ export async function weaveFirstArticleTitle({
 	const {
 		object: { title },
 	} = await generateObject({
-		model: DEFAULT_MODEL,
+		model: FAST_MODEL,
 		schema: z.object({
 			title: z.string().min(4).max(50),
 		}),

@@ -54,7 +54,7 @@
 		"drizzle-kit": "^0.31.1",
 		"tw-animate-css": "^1.3.4",
 		"typescript": "^5.9.3",
-		"vercel": "^49.1.2",
+		"vercel": "^54.13.0",
 		"vitest": "^4.0.15"
 	}
 }

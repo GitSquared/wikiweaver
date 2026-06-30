@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { db } from '@/db';
 import { articles } from '@/db/schema/article';
 import { universes } from '@/db/schema/universe';
-import { indexArticle } from '@/lib/search';
+import { persistCompletedArticle } from '@/lib/persistArticle';
 import { unslugify } from '@/lib/slugify';
 import { weaveWikiArticle } from '@/lib/weave';
 import ArticleRenderer from './components/ArticleRenderer';
@@ -41,61 +41,36 @@ async function findOrCreateArticle({
 		notFound();
 	}
 
-	const weavedArticle = await weaveWikiArticle({ universe, title });
-
-	const [clientStream, backendStream] = weavedArticle.textStream.tee();
-
-	void (async () => {
-		const reader = backendStream.getReader();
-		let articleText = '';
-
-		async function wrapUpArticle() {
-			await db
-				.insert(articles)
-				.values({
+	const weavedArticle = await weaveWikiArticle({
+		universe,
+		title,
+		onFinish: async ({ text, finishReason }) => {
+			try {
+				await persistCompletedArticle({
 					universeId: universe.id,
-					slug: articleSlug,
+					articleSlug,
 					title,
-					text: articleText,
-				})
-				.onConflictDoNothing(); // If two generations happen simultaneously, keep the first one
-
-			// Get the generated article back, or the first one that was generated in case of conflicts
-			const [newArticle] = await db
-				.select()
-				.from(articles)
-				.where(eq(articles.slug, articleSlug))
-				.limit(1);
-
-			if (articleText === newArticle.text) {
-				// Our generation was the one inserted!
-				console.log(
-					`Weaved new article: ${universe.name} / ${newArticle.title}`,
+					text,
+					finishReason,
+				});
+				console.log(`Weaved new article: ${universe.name} / ${title}`);
+			} catch (error) {
+				console.error(
+					`Failed to persist article: ${universe.name} / ${title}`,
+					error,
 				);
-
-				await indexArticle(newArticle);
+				throw error;
 			}
+		},
+		onError: ({ error }) => {
+			console.error(
+				`Article generation failed: ${universe.name} / ${title}`,
+				error,
+			);
+		},
+	});
 
-			return newArticle.text;
-		}
-
-		function processChunk({ done, value }: ReadableStreamReadResult<string>) {
-			if (value) {
-				articleText += value;
-			}
-
-			if (done) {
-				void wrapUpArticle();
-				return;
-			}
-
-			reader.read().then(processChunk);
-		}
-
-		reader.read().then(processChunk);
-	})();
-
-	return clientStream;
+	return weavedArticle.textStream;
 }
 
 export default async function WikiArticlePage({

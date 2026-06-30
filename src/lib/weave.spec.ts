@@ -33,6 +33,8 @@ describe('weave model selection', () => {
 			});
 		streamText.mockReturnValue({ textStream: new ReadableStream<string>() });
 		searchArticles.mockResolvedValue([]);
+		const onFinish = vi.fn();
+		const onError = vi.fn();
 
 		const universe = {
 			id: 'universe-id',
@@ -44,7 +46,12 @@ describe('weave model selection', () => {
 
 		await weaveUniverseName({ prompt: universe.prompt });
 		await weaveFirstArticleTitle({ universe });
-		await weaveWikiArticle({ universe, title: 'Silver Road Gardens' });
+		await weaveWikiArticle({
+			universe,
+			title: 'Silver Road Gardens',
+			onFinish,
+			onError,
+		});
 
 		expect(generateObject).toHaveBeenNthCalledWith(
 			1,
@@ -55,7 +62,11 @@ describe('weave model selection', () => {
 			expect.objectContaining({ model: 'openai/gpt-5-nano' }),
 		);
 		expect(streamText).toHaveBeenCalledWith(
-			expect.objectContaining({ model: 'openai/gpt-5-mini' }),
+			expect.objectContaining({
+				model: 'openai/gpt-5-mini',
+				onFinish,
+				onError,
+			}),
 		);
 	});
 });

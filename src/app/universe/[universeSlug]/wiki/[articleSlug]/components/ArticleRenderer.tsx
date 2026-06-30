@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useLayoutEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { readArticleStream } from '@/lib/readArticleStream';
 import { slugify } from '@/lib/slugify';
 import styles from './ArticleRenderer.module.css';
 
@@ -19,59 +20,38 @@ export default function ArticleRenderer({
 
 	const articleStream = use(articleTextStream);
 	const [receivedArticleText, setReceivedArticleText] = useState<string>('');
+	const [streamError, setStreamError] = useState<string | null>(null);
 
 	useEffect(() => {
 		setReceivedArticleText('');
+		setStreamError(null);
 		if (typeof articleStream === 'string') {
 			setReceivedArticleText(articleStream);
 			return;
 		}
 
-		(async () => {
-			console.log('Processing article stream...');
+		const abortController = new AbortController();
 
-			if (articleStream.locked) {
-				// Maybe just being released by an earlier effect render
-				console.log('Article stream is locked, waiting for it to unlock...');
-				await new Promise((resolve) => setTimeout(resolve, 100));
-
-				if (articleStream.locked) {
-					console.warn('Article stream is still locked, skipping processing.');
-					return;
-				}
-			}
-
-			let cancelled = false;
-			const reader = articleStream.getReader();
-
-			function processChunk({ done, value }: ReadableStreamReadResult<string>) {
-				if (cancelled) {
-					return;
-				}
-
-				if (value) {
-					setReceivedArticleText((prev) => prev + value);
-				}
-
-				if (done) {
-					// Refresh in the background to ensure we show the article generation that
-					// was committed to the database
-					console.info('Article stream is over, refreshing data to sync...');
+		void readArticleStream(articleStream, {
+			signal: abortController.signal,
+			onChunk: (chunk) => {
+				setReceivedArticleText((previous) => previous + chunk);
+			},
+		})
+			.then(() => {
+				if (!abortController.signal.aborted) {
+					// AI SDK awaits article persistence before closing the stream.
 					router.refresh();
-					return;
 				}
+			})
+			.catch((error: unknown) => {
+				if (!abortController.signal.aborted) {
+					console.error('Article stream failed', error);
+					setStreamError('This article could not be fully generated.');
+				}
+			});
 
-				reader.read().then(processChunk);
-			}
-
-			reader.read().then(processChunk);
-
-			return () => {
-				cancelled = true;
-				reader.releaseLock();
-				reader.cancel();
-			};
-		})();
+		return () => abortController.abort();
 	}, [articleStream, router]);
 
 	const [scope, animate] = useAnimate();
@@ -92,38 +72,55 @@ export default function ArticleRenderer({
 			initial={{ opacity: 0, y: 15 }}
 			animate={{ opacity: 1, y: 0 }}
 		>
-			<ReactMarkdown
-				components={{
-					a: ({ node, ...props }) => {
-						const href = props.href || '';
-						if (href.startsWith('http')) {
-							return <a {...props} />;
-						}
-						return (
-							<Link
-								href={href}
-								onClick={async (e) => {
-									e.preventDefault();
+			{streamError ? (
+				<div role="alert" className="flex flex-col items-start gap-3">
+					<p>{streamError}</p>
+					<button
+						type="button"
+						className="underline underline-offset-4"
+						onClick={() => router.refresh()}
+					>
+						Try again
+					</button>
+				</div>
+			) : receivedArticleText ? (
+				<ReactMarkdown
+					components={{
+						a: ({ node, ...props }) => {
+							const href = props.href || '';
+							if (href.startsWith('http')) {
+								return <a {...props} />;
+							}
+							return (
+								<Link
+									href={href}
+									onClick={async (e) => {
+										e.preventDefault();
 
-									await animate(
-										scope.current,
-										{
-											opacity: 0,
-										},
-										{
-											duration: 0.15,
-										},
-									);
-									router.push(href);
-								}}
-								{...props}
-							/>
-						);
-					},
-				}}
-			>
-				{makeArticleReferencesMarkdownLinks(receivedArticleText)}
-			</ReactMarkdown>
+										await animate(
+											scope.current,
+											{
+												opacity: 0,
+											},
+											{
+												duration: 0.15,
+											},
+										);
+										router.push(href);
+									}}
+									{...props}
+								/>
+							);
+						},
+					}}
+				>
+					{makeArticleReferencesMarkdownLinks(receivedArticleText)}
+				</ReactMarkdown>
+			) : (
+				<p role="status" className="text-muted-foreground">
+					Weaving article…
+				</p>
+			)}
 		</motion.article>
 	);
 }

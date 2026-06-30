@@ -4,6 +4,11 @@ import { DEFAULT_MODEL, FAST_MODEL } from '@/ai';
 import type { Universe } from '@/db/schema/universe';
 import { searchArticles } from './search';
 
+type ArticleStreamCallbacks = Pick<
+	Parameters<typeof streamText>[0],
+	'onFinish' | 'onError'
+>;
+
 export async function weaveUniverseName({
 	prompt,
 }: {
@@ -68,10 +73,12 @@ export async function weaveFirstArticleTitle({
 export async function weaveWikiArticle({
 	universe,
 	title,
+	onFinish,
+	onError,
 }: {
 	universe: Universe;
 	title: string;
-}): Promise<{
+} & ArticleStreamCallbacks): Promise<{
 	textStream: ReturnType<typeof streamText>['textStream'];
 }> {
 	const references = await searchArticles(universe.id, title).then((results) =>
@@ -118,6 +125,8 @@ Begin the article now:`;
 	const { textStream } = streamText({
 		model: DEFAULT_MODEL,
 		prompt,
+		onFinish,
+		onError,
 	});
 
 	return {

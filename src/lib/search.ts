@@ -55,23 +55,6 @@ function paragraphSelection(score: ReturnType<typeof sql<number>>) {
 	};
 }
 
-async function searchArticlesWithPgSearch(universeId: string, query: string) {
-	const score = sql<number>`paradedb.score(${paragraphs.id})`;
-
-	return db
-		.select(paragraphSelection(score))
-		.from(paragraphs)
-		.innerJoin(articles, eq(paragraphs.articleId, articles.id))
-		.where(
-			and(
-				eq(articles.universeId, universeId),
-				sql`${paragraphs.id} @@@ paradedb.match(${paragraphs.text.name}, ${query}, distance => 1)`,
-			),
-		)
-		.orderBy(desc(score))
-		.limit(SEARCH_LIMIT);
-}
-
 async function searchArticlesWithLakebaseText(
 	universeId: string,
 	query: string,
@@ -125,10 +108,10 @@ export async function searchArticles(
 		return [];
 	}
 
-	const topParagraphs =
-		process.env.WIKIWEAVER_SEARCH_BACKEND === 'lakebase_text'
-			? await searchArticlesWithLakebaseText(universeId, normalizedQuery)
-			: await searchArticlesWithPgSearch(universeId, normalizedQuery);
+	const topParagraphs = await searchArticlesWithLakebaseText(
+		universeId,
+		normalizedQuery,
+	);
 
 	const grouped = new Map<
 		string,

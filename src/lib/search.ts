@@ -81,9 +81,7 @@ async function searchArticlesWithLakebaseText(
 		return matches;
 	}
 
-	// pg_search supported typo distance directly. lakebase_text intentionally
-	// sticks to Postgres FTS, so pg_trgm provides a fuzzy fallback when the BM25
-	// query has no exact/stemmed matches.
+	// pg_trgm provides a fuzzy fallback when BM25 has no exact or stemmed matches.
 	const fuzzyScore = sql<number>`word_similarity(${query}, ${paragraphs.text})`;
 	return db
 		.select(paragraphSelection(fuzzyScore))

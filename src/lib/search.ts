@@ -1,5 +1,5 @@
 'use server';
-import { and, desc, eq, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, sql } from 'drizzle-orm';
 import { db } from '@/db';
 import { type Article, articles } from '@/db/schema/article';
 import { type Paragraph, paragraphs } from '@/db/schema/paragraph';
@@ -42,29 +42,76 @@ export interface SearchArticlesResult {
 	paragraphs: Pick<Paragraph, 'id' | 'text'>[];
 }
 
-export async function searchArticles(
+const SEARCH_LIMIT = 15;
+
+function paragraphSelection(score: ReturnType<typeof sql<number>>) {
+	return {
+		articleId: articles.id,
+		articleTitle: articles.title,
+		articleSlug: articles.slug,
+		id: paragraphs.id,
+		text: paragraphs.text,
+		score,
+	};
+}
+
+async function searchArticlesWithLakebaseText(
 	universeId: string,
 	query: string,
-): Promise<SearchArticlesResult[]> {
-	const topParagraphs = await db
-		.select({
-			articleId: articles.id,
-			articleTitle: articles.title,
-			articleSlug: articles.slug,
-			id: paragraphs.id,
-			text: paragraphs.text,
-			score: sql`paradedb.score(${paragraphs.id})`,
-		})
+) {
+	const textQuery = sql`websearch_to_tsquery('english', ${query})`;
+	const score = sql<number>`${paragraphs.searchTsv} <@> to_bm25query(
+		to_tsvector('english', ${query}),
+		'paragraph_search_lakebase_idx'::regclass
+	)`;
+	const matches = await db
+		.select(paragraphSelection(score))
 		.from(paragraphs)
 		.innerJoin(articles, eq(paragraphs.articleId, articles.id))
 		.where(
 			and(
 				eq(articles.universeId, universeId),
-				sql`${paragraphs.id} @@@ paradedb.match(${paragraphs.text.name}, ${query.trim()}, distance => 1)`,
+				sql`${paragraphs.searchTsv} @@ ${textQuery}`,
 			),
 		)
-		.orderBy(desc(sql`paradedb.score(${paragraphs.id})`))
-		.limit(15);
+		.orderBy(asc(score))
+		.limit(SEARCH_LIMIT);
+
+	if (matches.length > 0) {
+		return matches;
+	}
+
+	// pg_search supported typo distance directly. lakebase_text intentionally
+	// sticks to Postgres FTS, so pg_trgm provides a fuzzy fallback when the BM25
+	// query has no exact/stemmed matches.
+	const fuzzyScore = sql<number>`word_similarity(${query}, ${paragraphs.text})`;
+	return db
+		.select(paragraphSelection(fuzzyScore))
+		.from(paragraphs)
+		.innerJoin(articles, eq(paragraphs.articleId, articles.id))
+		.where(
+			and(
+				eq(articles.universeId, universeId),
+				sql`${query} <% ${paragraphs.text}`,
+			),
+		)
+		.orderBy(desc(fuzzyScore))
+		.limit(SEARCH_LIMIT);
+}
+
+export async function searchArticles(
+	universeId: string,
+	query: string,
+): Promise<SearchArticlesResult[]> {
+	const normalizedQuery = query.trim();
+	if (!normalizedQuery) {
+		return [];
+	}
+
+	const topParagraphs = await searchArticlesWithLakebaseText(
+		universeId,
+		normalizedQuery,
+	);
 
 	const grouped = new Map<
 		string,

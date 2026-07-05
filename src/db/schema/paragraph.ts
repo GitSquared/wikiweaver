@@ -21,11 +21,6 @@ export const paragraphs = pgTable(
 		),
 	},
 	(table) => [
-		// Keep the ParadeDB index during the additive migration. A later cleanup can
-		// remove it after lakebase_text has soaked in production.
-		index('paragraph_search_idx')
-			.using('bm25', table.id, table.text)
-			.with({ key_field: table.id.name }),
 		index('paragraph_search_lakebase_idx').using(
 			'lakebase_bm25',
 			table.searchTsv,

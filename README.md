@@ -1,3 +1,7 @@
+<div align="center">
+<img width="400" height="400" alt="wikiweaver heading and logo" src="https://github.com/user-attachments/assets/cc19a821-5939-4165-b785-cb446c42cc0f" />
+</div>
+
 # WikiWeaver
 
 An infinite, LLM-hallucinated wikipedia that lets you browse the wikis of parallel universes

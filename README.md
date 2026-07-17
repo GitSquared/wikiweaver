@@ -6,7 +6,14 @@
 
 An infinite, LLM-hallucinated wikipedia that lets you browse the wikis of parallel universes
 
+AI hallucinates articles based on a seed prompt, inserting links to names, concepts and events. Clicking on links deepens the rabbit hole, generating new articles and hallucinating more of the lore.
+
+Article generation is streamed live, BM25 indexing on article titles and existing paragraphs preserves continuity and world coherence as new links are explored.
+
 Try it now: [wikiweaver.gaby.dev](https://wikiweaver.gaby.dev)
+
+<img width="1830" height="1192" alt="image" src="https://github.com/user-attachments/assets/daf57e55-459e-4875-9d87-df8670052603" />
+
 
 ## Roadmap
 
@@ -34,4 +41,4 @@ Try it now: [wikiweaver.gaby.dev](https://wikiweaver.gaby.dev)
 
 ---
 
-###### © 2025 Gabriel Saillard <gabriel@saillard.dev>
+###### © 2026 Gabriel Saillard <gabriel@saillard.dev>

@@ -1,4 +1,4 @@
-import { generateObject, streamText } from 'ai';
+import { generateText, Output, streamText } from 'ai';
 import z from 'zod';
 import { DEFAULT_MODEL, FAST_MODEL } from '@/ai';
 import type { Universe } from '@/db/schema/universe';
@@ -6,7 +6,7 @@ import { searchArticles } from './search';
 
 type ArticleStreamCallbacks = Pick<
 	Parameters<typeof streamText>[0],
-	'onFinish' | 'onError'
+	'onEnd' | 'onError'
 >;
 
 export async function weaveUniverseName({
@@ -15,12 +15,14 @@ export async function weaveUniverseName({
 	prompt: string;
 }): Promise<string> {
 	const {
-		object: { universeName, shouldAbort },
-	} = await generateObject({
+		output: { universeName, shouldAbort },
+	} = await generateText({
 		model: FAST_MODEL,
-		schema: z.object({
-			universeName: z.string().min(4).max(50),
-			shouldAbort: z.boolean().optional(),
+		output: Output.object({
+			schema: z.object({
+				universeName: z.string().min(4).max(50),
+				shouldAbort: z.boolean().optional(),
+			}),
 		}),
 		prompt: `
 Generate a name for a universe based on the following prompt:
@@ -58,11 +60,13 @@ export async function weaveFirstArticleTitle({
 	universe: Universe;
 }): Promise<string> {
 	const {
-		object: { title },
-	} = await generateObject({
+		output: { title },
+	} = await generateText({
 		model: FAST_MODEL,
-		schema: z.object({
-			title: z.string().min(4).max(50),
+		output: Output.object({
+			schema: z.object({
+				title: z.string().min(4).max(50),
+			}),
 		}),
 		prompt: `Generate a title for an article of a wiki within the universe "${universe.name}" based on its themes and lore. Here is a brief description of this universe: "${universe.prompt}". Invent any concept, event, place, object, character or so on that could warrant an encyclopedia article within that universe, and return the article's title. The title should be concise and fitting of a fictional encyclopedia, and in-lore. It should not be more than 50 characters long.`,
 	});
@@ -73,7 +77,7 @@ export async function weaveFirstArticleTitle({
 export async function weaveWikiArticle({
 	universe,
 	title,
-	onFinish,
+	onEnd,
 	onError,
 }: {
 	universe: Universe;
@@ -125,7 +129,7 @@ Begin the article now:`;
 	const { textStream } = streamText({
 		model: DEFAULT_MODEL,
 		prompt,
-		onFinish,
+		onEnd,
 		onError,
 	});
 

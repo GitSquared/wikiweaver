@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-const generateObject = vi.fn();
+const generateText = vi.fn();
+const objectOutput = vi.fn((options) => options);
 const streamText = vi.fn();
 const searchArticles = vi.fn();
 
 vi.mock('ai', () => ({
-	generateObject,
+	generateText,
+	Output: { object: objectOutput },
 	streamText,
 }));
 
@@ -15,7 +17,8 @@ vi.mock('./search', () => ({
 
 describe('weave model selection', () => {
 	beforeEach(() => {
-		generateObject.mockReset();
+		generateText.mockReset();
+		objectOutput.mockClear();
 		streamText.mockReset();
 		searchArticles.mockReset();
 	});
@@ -24,16 +27,16 @@ describe('weave model selection', () => {
 		const { weaveFirstArticleTitle, weaveUniverseName, weaveWikiArticle } =
 			await import('./weave');
 
-		generateObject
+		generateText
 			.mockResolvedValueOnce({
-				object: { universeName: 'Moss Cartographers', shouldAbort: false },
+				output: { universeName: 'Moss Cartographers', shouldAbort: false },
 			})
 			.mockResolvedValueOnce({
-				object: { title: 'Silver Road Gardens' },
+				output: { title: 'Silver Road Gardens' },
 			});
 		streamText.mockReturnValue({ textStream: new ReadableStream<string>() });
 		searchArticles.mockResolvedValue([]);
-		const onFinish = vi.fn();
+		const onEnd = vi.fn();
 		const onError = vi.fn();
 
 		const universe = {
@@ -49,22 +52,22 @@ describe('weave model selection', () => {
 		await weaveWikiArticle({
 			universe,
 			title: 'Silver Road Gardens',
-			onFinish,
+			onEnd,
 			onError,
 		});
 
-		expect(generateObject).toHaveBeenNthCalledWith(
+		expect(generateText).toHaveBeenNthCalledWith(
 			1,
 			expect.objectContaining({ model: 'openai/gpt-5-nano' }),
 		);
-		expect(generateObject).toHaveBeenNthCalledWith(
+		expect(generateText).toHaveBeenNthCalledWith(
 			2,
 			expect.objectContaining({ model: 'openai/gpt-5-nano' }),
 		);
 		expect(streamText).toHaveBeenCalledWith(
 			expect.objectContaining({
 				model: 'openai/gpt-5-mini',
-				onFinish,
+				onEnd,
 				onError,
 			}),
 		);

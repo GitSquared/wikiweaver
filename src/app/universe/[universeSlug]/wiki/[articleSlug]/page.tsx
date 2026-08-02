@@ -4,6 +4,7 @@ import { db } from '@/db';
 import { articles } from '@/db/schema/article';
 import { universes } from '@/db/schema/universe';
 import { persistCompletedArticle } from '@/lib/persistArticle';
+import { removeEmptyArticlePlaceholder } from '@/lib/removeEmptyArticlePlaceholder';
 import { unslugify } from '@/lib/slugify';
 import { weaveWikiArticle } from '@/lib/weave';
 import ArticleRenderer from './components/ArticleRenderer';
@@ -23,8 +24,20 @@ async function findOrCreateArticle({
 			and(eq(universes.slug, universeSlug), eq(articles.slug, articleSlug)),
 		);
 
-	if (existingArticle) {
+	if (existingArticle?.articles.text.trim()) {
 		return existingArticle.articles.text;
+	}
+
+	if (existingArticle) {
+		const removed = await removeEmptyArticlePlaceholder(
+			existingArticle.articles,
+		);
+
+		if (removed) {
+			console.warn(
+				`Removed empty article placeholder: ${universeSlug} / ${articleSlug}`,
+			);
+		}
 	}
 
 	const title = unslugify(articleSlug);

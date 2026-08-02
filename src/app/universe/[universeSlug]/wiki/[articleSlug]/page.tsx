@@ -44,7 +44,7 @@ async function findOrCreateArticle({
 	const weavedArticle = await weaveWikiArticle({
 		universe,
 		title,
-		onFinish: async ({ text, finishReason }) => {
+		onEnd: async ({ text, finishReason }) => {
 			try {
 				await persistCompletedArticle({
 					universeId: universe.id,

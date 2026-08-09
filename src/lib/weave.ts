@@ -21,7 +21,7 @@ export async function weaveUniverseName({
 		output: Output.object({
 			schema: z.object({
 				universeName: z.string().min(4).max(50),
-				shouldAbort: z.boolean().optional(),
+				shouldAbort: z.boolean(),
 			}),
 		}),
 		prompt: `
@@ -35,7 +35,7 @@ ${prompt}
 
 The name should be no more than 50 characters long, and should be unique, memorable, and fitting for a fictional universe. Avoid using common words or phrases.
 
-You can also raise the shouldAbort flag, by returning shouldAbort = true, if you believe that prompt to be harmful, inappropriate, or other unsuitable for a public wiki. If you raise this flag, also return "ABORT" as the universeName.
+Always return the shouldAbort flag. Return shouldAbort = false for acceptable prompts. Return shouldAbort = true if you believe that prompt to be harmful, inappropriate, or otherwise unsuitable for a public wiki. If you raise this flag, also return "ABORT" as the universeName.
 Here is a non-exhaustive list of content that should be considered inappropriate:
 
 - Hate speech or discrimination

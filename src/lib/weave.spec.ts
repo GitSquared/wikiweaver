@@ -72,4 +72,26 @@ describe('weave model selection', () => {
 			}),
 		);
 	});
+
+	test('requires an explicit abort decision for universe names', async () => {
+		const { weaveUniverseName } = await import('./weave');
+		generateText.mockResolvedValue({
+			output: { universeName: 'Moss Cartographers', shouldAbort: false },
+		});
+
+		await weaveUniverseName({
+			prompt: 'A quiet moon where cartographers grow roads from silver moss',
+		});
+
+		const [{ schema }] = objectOutput.mock.calls[0];
+		expect(
+			schema.safeParse({ universeName: 'Moss Cartographers' }).success,
+		).toBe(false);
+		expect(
+			schema.safeParse({
+				universeName: 'Moss Cartographers',
+				shouldAbort: false,
+			}).success,
+		).toBe(true);
+	});
 });

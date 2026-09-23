@@ -26,7 +26,7 @@
 		"postcss": "$postcss",
 		"react": "$react",
 		"react-dom": "$react-dom",
-		"sharp": "0.35.3",
+		"sharp": "0.35.4",
 		"tar": "7.5.22",
 		"tsx@4.21.0": {
 			"esbuild": "0.28.1"

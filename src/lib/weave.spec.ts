@@ -23,7 +23,7 @@ describe('weave model selection', () => {
 		searchArticles.mockReset();
 	});
 
-	test('uses nano for short structured generation and GLM for articles', async () => {
+	test('uses Luna for short structured generation and GLM for articles', async () => {
 		const { weaveFirstArticleTitle, weaveUniverseName, weaveWikiArticle } =
 			await import('./weave');
 
@@ -58,11 +58,11 @@ describe('weave model selection', () => {
 
 		expect(generateText).toHaveBeenNthCalledWith(
 			1,
-			expect.objectContaining({ model: 'openai/gpt-5-nano' }),
+			expect.objectContaining({ model: 'openai/gpt-6-luna' }),
 		);
 		expect(generateText).toHaveBeenNthCalledWith(
 			2,
-			expect.objectContaining({ model: 'openai/gpt-5-nano' }),
+			expect.objectContaining({ model: 'openai/gpt-6-luna' }),
 		);
 		expect(streamText).toHaveBeenCalledWith(
 			expect.objectContaining({

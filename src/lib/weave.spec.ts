@@ -2,14 +2,15 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 const generateText = vi.fn();
 const objectOutput = vi.fn((options) => options);
-const streamText = vi.fn();
+const createArticleStream = vi.fn();
 const searchArticles = vi.fn();
 
 vi.mock('ai', () => ({
 	generateText,
 	Output: { object: objectOutput },
-	streamText,
 }));
+
+vi.mock('./articleStream', () => ({ createArticleStream }));
 
 vi.mock('./search', () => ({
 	searchArticles,
@@ -19,7 +20,7 @@ describe('weave model selection', () => {
 	beforeEach(() => {
 		generateText.mockReset();
 		objectOutput.mockClear();
-		streamText.mockReset();
+		createArticleStream.mockReset();
 		searchArticles.mockReset();
 	});
 
@@ -34,7 +35,7 @@ describe('weave model selection', () => {
 			.mockResolvedValueOnce({
 				output: { title: 'Silver Road Gardens' },
 			});
-		streamText.mockReturnValue({ textStream: new ReadableStream<string>() });
+		createArticleStream.mockReturnValue(new ReadableStream<string>());
 		searchArticles.mockResolvedValue([]);
 		const onEnd = vi.fn();
 		const onError = vi.fn();
@@ -64,7 +65,7 @@ describe('weave model selection', () => {
 			2,
 			expect.objectContaining({ model: 'openai/gpt-6-luna' }),
 		);
-		expect(streamText).toHaveBeenCalledWith(
+		expect(createArticleStream).toHaveBeenCalledWith(
 			expect.objectContaining({
 				model: 'zai/glm-5.3-flash',
 				onEnd,

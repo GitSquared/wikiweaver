@@ -5,12 +5,13 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { use, useEffect, useLayoutEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import type { ArticleChunk } from '@/lib/articleStream';
 import { readArticleStream } from '@/lib/readArticleStream';
 import { slugify } from '@/lib/slugify';
 import styles from './ArticleRenderer.module.css';
 
 interface ArticleRendererProps {
-	articleTextStream: Promise<string | ReadableStream<string>>;
+	articleTextStream: Promise<string | ReadableStream<ArticleChunk>>;
 }
 
 export default function ArticleRenderer({
@@ -34,6 +35,7 @@ export default function ArticleRenderer({
 
 		void readArticleStream(articleStream, {
 			signal: abortController.signal,
+			onReset: () => setReceivedArticleText(''),
 			onChunk: (chunk) => {
 				setReceivedArticleText((previous) => previous + chunk);
 			},

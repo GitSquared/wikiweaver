@@ -9,6 +9,8 @@ import { unslugify } from '@/lib/slugify';
 import { weaveWikiArticle } from '@/lib/weave';
 import ArticleRenderer from './components/ArticleRenderer';
 
+export const maxDuration = 300;
+
 async function findOrCreateArticle({
 	universeSlug,
 	articleSlug,

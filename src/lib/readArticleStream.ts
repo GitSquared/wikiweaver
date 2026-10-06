@@ -1,11 +1,14 @@
+import type { ArticleChunk } from './articleStream';
+
 interface ReadArticleStreamOptions {
 	onChunk: (chunk: string) => void;
+	onReset?: () => void;
 	signal?: AbortSignal;
 }
 
 export async function readArticleStream(
-	stream: ReadableStream<string>,
-	{ onChunk, signal }: ReadArticleStreamOptions,
+	stream: ReadableStream<ArticleChunk>,
+	{ onChunk, onReset, signal }: ReadArticleStreamOptions,
 ): Promise<void> {
 	const reader = stream.getReader();
 	let aborted = signal?.aborted ?? false;
@@ -26,7 +29,9 @@ export async function readArticleStream(
 			if (done || aborted) {
 				return;
 			}
-			if (value) {
+			if (typeof value === 'object' && value.type === 'reset') {
+				onReset?.();
+			} else if (typeof value === 'string' && value) {
 				onChunk(value);
 			}
 		}

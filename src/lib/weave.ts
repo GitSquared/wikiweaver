@@ -1,7 +1,8 @@
-import { generateText, Output, streamText } from 'ai';
+import { generateText, Output, type streamText } from 'ai';
 import z from 'zod';
 import { DEFAULT_MODEL, FAST_MODEL } from '@/ai';
 import type { Universe } from '@/db/schema/universe';
+import { type ArticleChunk, createArticleStream } from './articleStream';
 import { searchArticles } from './search';
 
 type ArticleStreamCallbacks = Pick<
@@ -83,8 +84,9 @@ export async function weaveWikiArticle({
 	universe: Universe;
 	title: string;
 } & ArticleStreamCallbacks): Promise<{
-	textStream: ReturnType<typeof streamText>['textStream'];
+	textStream: ReadableStream<ArticleChunk>;
 }> {
+	const deadlineAt = Date.now() + 280_000;
 	const references = await searchArticles(universe.id, title).then((results) =>
 		// max 10
 		results.slice(0, 10),
@@ -126,7 +128,9 @@ Make sure to keep your new article coherent and consistent with this existing in
 
 Begin the article now:`;
 
-	const { textStream } = streamText({
+	const textStream = createArticleStream({
+		deadlineAt,
+		article: { universeId: universe.id, title },
 		model: DEFAULT_MODEL,
 		prompt,
 		onEnd,

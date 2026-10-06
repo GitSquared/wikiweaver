@@ -32,6 +32,8 @@ export function createArticleStream({
 			for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
 				let completion: EndEvent | undefined;
 				let gateway: unknown;
+				let reasoningCharacters = 0;
+				let textCharacters = 0;
 				const attemptCancellation = new AbortController();
 				const signal = AbortSignal.any([
 					cancellation.signal,
@@ -62,6 +64,8 @@ export function createArticleStream({
 						model,
 						prompt,
 						maxRetries: 0,
+						// Creative encyclopedia prose needs a modest reasoning budget.
+						reasoning: 'low',
 						abortSignal: signal,
 						onEnd: (event) => {
 							completion = event;
@@ -93,7 +97,12 @@ export function createArticleStream({
 							if (part.type === 'error') throw part.error;
 							if (part.type === 'text-delta' || part.type === 'reasoning-delta')
 								receivedContent = true;
-							if (part.type === 'text-delta') controller.enqueue(part.text);
+							if (part.type === 'reasoning-delta')
+								reasoningCharacters += part.text.length;
+							if (part.type === 'text-delta') {
+								textCharacters += part.text.length;
+								controller.enqueue(part.text);
+							}
 						}
 					} finally {
 						reader.releaseLock();
@@ -127,6 +136,8 @@ export function createArticleStream({
 							attempt,
 							durationMs: Date.now() - startedAt,
 							gateway,
+							reasoningCharacters,
+							textCharacters,
 							...details,
 						}),
 					);
@@ -152,6 +163,7 @@ export function createArticleStream({
 						attempt,
 						durationMs: Date.now() - startedAt,
 						callId: completion.callId,
+						usage: completion.usage,
 						gateway: completion.finalStep?.providerMetadata?.gateway,
 					}),
 				);

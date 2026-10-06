@@ -78,6 +78,10 @@ describe('article generation recovery', () => {
 		expect(displayed).toBe('Complete article');
 		expect(reset).toHaveBeenCalledOnce();
 		expect(model.doStreamCalls).toHaveLength(2);
+		expect(model.doStreamCalls.map((call) => call.reasoning)).toEqual([
+			'low',
+			'low',
+		]);
 		expect(persist).toHaveBeenCalledOnce();
 		expect(persist.mock.calls[0][0].text).toBe('Complete article');
 		expect(

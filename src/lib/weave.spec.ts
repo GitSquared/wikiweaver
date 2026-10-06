@@ -23,7 +23,7 @@ describe('weave model selection', () => {
 		searchArticles.mockReset();
 	});
 
-	test('uses nano for short structured generation and mini for articles', async () => {
+	test('uses nano for short structured generation and GLM for articles', async () => {
 		const { weaveFirstArticleTitle, weaveUniverseName, weaveWikiArticle } =
 			await import('./weave');
 
@@ -66,7 +66,7 @@ describe('weave model selection', () => {
 		);
 		expect(streamText).toHaveBeenCalledWith(
 			expect.objectContaining({
-				model: 'openai/gpt-5-mini',
+				model: 'zai/glm-5.3-flash',
 				onEnd,
 				onError,
 			}),

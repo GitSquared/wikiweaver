@@ -34,7 +34,7 @@ export async function persistCompletedArticle({
 			title,
 			text,
 		})
-		.onConflictDoNothing()
+		.onConflictDoNothing({ target: [articles.universeId, articles.slug] })
 		.returning();
 
 	if (article) {

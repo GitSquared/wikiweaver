@@ -19,6 +19,8 @@ vi.mock('./search', () => ({
 	indexArticle,
 }));
 
+import { getTableConfig } from 'drizzle-orm/pg-core';
+import { articles } from '@/db/schema/article';
 import { persistCompletedArticle } from './persistArticle';
 
 const completedArticle = {
@@ -31,6 +33,15 @@ const completedArticle = {
 };
 
 describe('persistCompletedArticle', () => {
+	test('article slugs are unique within a universe, not across universes', () => {
+		const config = getTableConfig(articles);
+		expect(
+			config.uniqueConstraints.map((constraint) =>
+				constraint.columns.map((column) => column.name),
+			),
+		).toEqual([['universeId', 'slug']]);
+		expect(articles.slug.isUnique).toBe(false);
+	});
 	beforeEach(() => {
 		returning.mockReset();
 		onConflictDoNothing.mockClear();
@@ -57,6 +68,9 @@ describe('persistCompletedArticle', () => {
 			text: completedArticle.text,
 		});
 		expect(indexArticle).toHaveBeenCalledWith(completedArticle);
+		expect(onConflictDoNothing).toHaveBeenCalledWith({
+			target: [articles.universeId, articles.slug],
+		});
 	});
 
 	test.each([

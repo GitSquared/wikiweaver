@@ -1,5 +1,6 @@
 import { db } from '@/db';
 import { universes } from '@/db/schema/universe';
+import { admitGeneration } from '@/lib/generationGuard';
 import { slugify } from '@/lib/slugify';
 import { weaveUniverseName } from '@/lib/weave';
 import Home from './components/Home';
@@ -24,6 +25,8 @@ Promise<MakeUniverseResult> {
 	}
 
 	try {
+		const admission = await admitGeneration('universe:create');
+		if (!admission.allowed) return { ok: false, error: admission.message };
 		const universeName = await weaveUniverseName({ prompt });
 
 		const slug = slugify(universeName);

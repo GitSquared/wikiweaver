@@ -1,12 +1,15 @@
-import { eq } from 'drizzle-orm';
+import { asc, eq, sql } from 'drizzle-orm';
 import { notFound, redirect } from 'next/navigation';
 import { db } from '@/db';
 import { articles } from '@/db/schema/article';
 import { universes } from '@/db/schema/universe';
+import { admitGeneration } from '@/lib/generationGuard';
 import { slugify } from '@/lib/slugify';
 import { weaveFirstArticleTitle } from '@/lib/weave';
 
-async function findArticleSlug(universeSlug: string): Promise<string> {
+async function findArticleSlug(
+	universeSlug: string,
+): Promise<string | { message: string }> {
 	'use server';
 
 	const [universe] = await db
@@ -22,12 +25,18 @@ async function findArticleSlug(universeSlug: string): Promise<string> {
 	const [firstArticle] = await db
 		.select()
 		.from(articles)
-		.where(eq(articles.universeId, universe.id))
+		.where(
+			sql`${eq(articles.universeId, universe.id)} AND length(trim(${articles.text})) > 0`,
+		)
+		.orderBy(asc(articles.createdAt))
 		.limit(1);
 
 	if (firstArticle) {
 		return firstArticle.slug;
 	}
+
+	const admission = await admitGeneration(`first-title:${universeSlug}`);
+	if (!admission.allowed) return { message: admission.message };
 
 	// No articles found, make the first one!
 	const title = await weaveFirstArticleTitle({
@@ -47,6 +56,15 @@ export default async function UniversePage({
 	const { universeSlug } = await params;
 
 	const articleSlug = await findArticleSlug(universeSlug);
+
+	if (typeof articleSlug !== 'string') {
+		return (
+			<article role="status">
+				<p>{articleSlug.message}</p>
+				<a href={`/universe/${universeSlug}`}>Try again</a>
+			</article>
+		);
+	}
 
 	redirect(`/universe/${universeSlug}/wiki/${articleSlug}`);
 }

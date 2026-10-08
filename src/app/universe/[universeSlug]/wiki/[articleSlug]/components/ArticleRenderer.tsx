@@ -11,7 +11,9 @@ import { slugify } from '@/lib/slugify';
 import styles from './ArticleRenderer.module.css';
 
 interface ArticleRendererProps {
-	articleTextStream: Promise<string | ReadableStream<ArticleChunk>>;
+	articleTextStream: Promise<
+		string | ReadableStream<ArticleChunk> | { message: string }
+	>;
 }
 
 export default function ArticleRenderer({
@@ -28,6 +30,11 @@ export default function ArticleRenderer({
 		setStreamError(null);
 		if (typeof articleStream === 'string') {
 			setReceivedArticleText(articleStream);
+			return;
+		}
+
+		if (!(articleStream instanceof ReadableStream)) {
+			setStreamError(articleStream.message);
 			return;
 		}
 
@@ -96,6 +103,7 @@ export default function ArticleRenderer({
 							return (
 								<Link
 									href={href}
+									prefetch={false}
 									onClick={async (e) => {
 										e.preventDefault();
 

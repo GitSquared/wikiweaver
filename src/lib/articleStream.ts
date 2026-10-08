@@ -1,4 +1,5 @@
 import { streamText } from 'ai';
+import type { GenerationClient } from './generationPolicy';
 
 export type ArticleChunk = string | { type: 'reset' };
 type Options = Parameters<typeof streamText>[0];
@@ -14,10 +15,12 @@ export function createArticleStream({
 	onEnd,
 	onError,
 	article,
+	client,
 	deadlineAt = Date.now() + MAX_ATTEMPTS * ATTEMPT_TIMEOUT_MS,
 }: Pick<Options, 'model' | 'onEnd' | 'onError'> & {
 	prompt: string;
 	article?: { universeId: string; title: string };
+	client?: Pick<GenerationClient, 'id' | 'category' | 'country'>;
 	deadlineAt?: number;
 }): ReadableStream<ArticleChunk> {
 	const cancellation = new AbortController();
@@ -25,6 +28,7 @@ export function createArticleStream({
 	const context = {
 		requestId,
 		article,
+		client,
 		model: typeof model === 'string' ? model : model.modelId,
 	};
 	return new ReadableStream<ArticleChunk>({

@@ -1,25 +1,34 @@
-import { count, desc, eq } from 'drizzle-orm';
+import { count, eq, sql } from 'drizzle-orm';
 import { ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@/db';
 import { articles } from '@/db/schema/article';
 import { universes } from '@/db/schema/universe';
+import { selectFeaturedUniverses } from '@/lib/featuredUniverses';
 
 export default async function TopUniverses() {
-	const topUniverses = await db
+	const candidates = await db
 		.select({
 			universes,
 			articleCount: count(articles.id),
 		})
 		.from(universes)
-		.leftJoin(articles, eq(articles.universeId, universes.id))
-		.groupBy(universes.id)
-		.orderBy(desc(count(articles.id)))
-		.limit(5);
+		.leftJoin(
+			articles,
+			sql`${eq(articles.universeId, universes.id)} AND length(trim(${articles.text})) > 0`,
+		)
+		.groupBy(universes.id);
+
+	const topUniverses = selectFeaturedUniverses(
+		candidates.map((candidate) => ({
+			...candidate,
+			id: candidate.universes.id,
+		})),
+	);
 
 	return (
 		<aside className="max-w-lg fade-in delay-1000">
-			<h2 className="text-xl font-semibold px-4">Explore Top Universes</h2>
+			<h2 className="text-xl font-semibold px-4">Explore Universes</h2>
 			<ol className="flex flex-col mt-4">
 				{topUniverses.map(({ universes: universe, articleCount }) => (
 					<Link

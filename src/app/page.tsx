@@ -55,7 +55,8 @@ Promise<MakeUniverseResult> {
 	}
 }
 
-export const revalidate = 300; // revalidate every 5 minutes to keep the top universes ranking fresh
+// Regenerate the shared homepage after an hour; the CDN serves the cached page.
+export const revalidate = 3600;
 
 export default async function HomePage() {
 	return (

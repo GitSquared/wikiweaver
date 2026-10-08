@@ -3,6 +3,7 @@ import z from 'zod';
 import { DEFAULT_MODEL, FAST_MODEL } from '@/ai';
 import type { Universe } from '@/db/schema/universe';
 import { type ArticleChunk, createArticleStream } from './articleStream';
+import type { GenerationClient } from './generationPolicy';
 import { searchArticles } from './search';
 
 type ArticleStreamCallbacks = Pick<
@@ -80,9 +81,11 @@ export async function weaveWikiArticle({
 	title,
 	onEnd,
 	onError,
+	client,
 }: {
 	universe: Universe;
 	title: string;
+	client?: Pick<GenerationClient, 'id' | 'category' | 'country'>;
 } & ArticleStreamCallbacks): Promise<{
 	textStream: ReadableStream<ArticleChunk>;
 }> {
@@ -131,6 +134,7 @@ Begin the article now:`;
 	const textStream = createArticleStream({
 		deadlineAt,
 		article: { universeId: universe.id, title },
+		client,
 		model: DEFAULT_MODEL,
 		prompt,
 		onEnd,

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { db } from '@/db';
 import { articles } from '@/db/schema/article';
 import { universes } from '@/db/schema/universe';
+import { admitGeneration } from '@/lib/generationGuard';
 import { persistCompletedArticle } from '@/lib/persistArticle';
 import { removeEmptyArticlePlaceholder } from '@/lib/removeEmptyArticlePlaceholder';
 import { unslugify } from '@/lib/slugify';
@@ -30,6 +31,19 @@ async function findOrCreateArticle({
 		return existingArticle.articles.text;
 	}
 
+	// Validate the universe before consuming a generation allowance.
+	const [universe] = await db
+		.select()
+		.from(universes)
+		.where(eq(universes.slug, universeSlug))
+		.limit(1);
+	if (!universe) notFound();
+
+	const admission = await admitGeneration(
+		`article:${universeSlug}/${articleSlug}`,
+	);
+	if (!admission.allowed) return { message: admission.message };
+
 	if (existingArticle) {
 		const removed = await removeEmptyArticlePlaceholder(
 			existingArticle.articles,
@@ -46,19 +60,14 @@ async function findOrCreateArticle({
 
 	console.log(`Starting to weave new article: ${universeSlug} / ${title}`);
 
-	const [universe] = await db
-		.select()
-		.from(universes)
-		.where(eq(universes.slug, universeSlug))
-		.limit(1);
-
-	if (!universe) {
-		notFound();
-	}
-
 	const weavedArticle = await weaveWikiArticle({
 		universe,
 		title,
+		client: {
+			id: admission.client.id,
+			category: admission.client.category,
+			country: admission.client.country,
+		},
 		onEnd: async ({ text, finishReason }) => {
 			try {
 				await persistCompletedArticle({

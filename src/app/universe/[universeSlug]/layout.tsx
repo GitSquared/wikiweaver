@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 import MultiverseWindow from '@/components/MultiverseWindow';
 import { db } from '@/db';
@@ -31,6 +32,8 @@ export default async function UniverseLayout({
 		.from(universes)
 		.where(eq(universes.slug, universeSlug))
 		.limit(1);
+
+	if (!universe) notFound();
 
 	return (
 		<div className="flex flex-col min-h-screen max-w-[60rem] mx-auto">

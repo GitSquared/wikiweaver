@@ -60,7 +60,7 @@
 		"tailwind-merge": "^3.3.1",
 		"tailwindcss": "^4.1.10",
 		"uvcanvas": "^0.3.0",
-		"zod": "^4.1.13"
+		"zod": "^4.6.7"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.3.8",

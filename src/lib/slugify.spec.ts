@@ -14,6 +14,20 @@ describe('slugify', () => {
 	test('should handle leading and trailing spaces', () => {
 		expect(slugify('  Hello World  ')).toBe('hello-world');
 	});
+	test('preserves non-Latin names', () => {
+		expect(slugify('무인궤도의 연대')).toBe('무인궤도의-연대');
+	});
+	test('normalizes and preserves accented names', () => {
+		expect(slugify('Échos ＆ Rêves')).toBe('échos-rêves');
+	});
+	test('returns an empty slug when a name contains no letters or numbers', () => {
+		expect(slugify('✨ — !!!')).toBe('');
+	});
+	test('limits slugs without splitting Unicode characters', () => {
+		const slug = slugify('界'.repeat(300));
+		expect(Array.from(slug)).toHaveLength(255);
+		expect(slug).toBe('界'.repeat(255));
+	});
 });
 
 describe('unslugify', () => {
